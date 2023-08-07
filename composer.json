@@ -1,0 +1,7 @@
+{
+    "require": {
+        "predis/predis": "^2.0",
+        "fakerphp/faker": "^1.21",
+        "koolreport/core": "^6.0"
+    }
+}

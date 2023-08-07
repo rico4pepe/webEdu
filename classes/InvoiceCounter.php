@@ -1,0 +1,113 @@
+<?php
+require_once("../PhpConnections/connection.php");
+
+class InvoiceCounter
+{
+    function insertInvoiceCounter($invoiceStart, $uniqueValue, $annex_id)
+    {
+        $conn = connect();
+
+        // $created_At = date("Y-m-d H:i:s");
+        // $modified_At = date("Y-m-d H:i:s");
+        // $Is_Deleted = 0;invoice_number
+        $invoice_number = $uniqueValue  . "-" . $invoiceStart;
+
+       
+
+        $sql = "INSERT INTO `invoicecounter` (`counter_series`, `invoice_uniqueId`, `annex_id`, `invoice_number`) VALUES " . "( :cseries, :iunique, :aid, :invnum )";
+
+        try {
+            //code...
+            $stmt = $conn->prepare($sql);
+        $stmt->bindValue(":cseries", $invoiceStart);
+        $stmt->bindValue(":iunique", $uniqueValue);
+        $stmt->bindValue(":aid", $annex_id);
+        $stmt->bindValue(":invnum", $invoice_number);
+       
+       
+
+        $stmt->execute();
+
+        $num_rows = $stmt->rowCount();
+
+     
+        //$result = $stmt->fetchAll();
+        if ($num_rows  > 0) {
+            $msg = "Counter Sequence has been created.";
+          $msgType = "success";
+          ?>
+         <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+       <?php   
+        }else {
+            $msg = "Counter Sequence was not created succesfully" ;
+            $msgType = "warning";
+            ?>
+              <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+         <?php   
+          }
+
+       
+        } catch (Exception $ex) {
+            //throw $th;
+            echo $ex->getMessage();
+        }
+        
+    }
+
+    function updateAnnex($annex_name, $annex_id){
+        $conn = connect();
+        $sql = "UPDATE annex SET annex_name=:aname  WHERE id=:id";
+        try {
+            //code...
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(":aname", $annex_name);
+          
+
+            $stmt->bindValue(":id", $annex_id);
+            if($stmt->execute()){
+                $msg = "Annex has Been Updated.";
+                $msgType = "success";
+            
+            ?>
+
+            <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+       <?php   
+        }else {
+            $msg = "Annex was not succesfully updated " ;
+            $msgType = "warning";
+            ?>
+              <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+         <?php   
+          }
+        } catch (Exception $ex) {
+            //throw $th;
+            echo $ex->getMessage();
+        }
+    }
+    function dropdownAnnex(){
+        $conn = connect();
+        $user_query  = $conn->prepare("SELECT id, annex_name FROM annex");
+        $user_query->execute();
+
+
+        while($row = $user_query->fetch(PDO::FETCH_ASSOC)){
+            $annex_id = $row['id'];
+           $annex_name = $row['annex_name'];
+
+            echo '<option value=" '. $annex_id .'" >'.$annex_name.'</option>';
+   }
+    }
+}
