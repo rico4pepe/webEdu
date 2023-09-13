@@ -1,0 +1,7 @@
+[18-Aug-2023 14:22:57 UTC] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42S02]: Base table or view not found: 1146 Table 'webeduco_db.subjects' doesn't exist' in /home2/webeduco/public_html/techedu.webedu.com.ng/admin/classes/Subjects.php:60
+Stack trace:
+#0 /home2/webeduco/public_html/techedu.webedu.com.ng/admin/classes/Subjects.php(60): PDOStatement->execute()
+#1 /home2/webeduco/public_html/techedu.webedu.com.ng/admin/lessonNote/Create_LessonNote.php(677): Subjects->dropdownSubject()
+#2 {main}
+  thrown in /home2/webeduco/public_html/techedu.webedu.com.ng/admin/classes/Subjects.php on line 60
+[18-Aug-2023 15:24:09 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 5.6.40. in /home2/webeduco/public_html/techedu.webedu.com.ng/admin/vendor/composer/platform_check.php on line 25

@@ -21,6 +21,7 @@ class Sanitize {
 
     public static function sanitizeInteger($input) {
         // Remove non-digit characters and sanitize
+        
         $sanitizedInteger = filter_var($input, FILTER_SANITIZE_NUMBER_INT);
 
         // Additional validation steps if needed

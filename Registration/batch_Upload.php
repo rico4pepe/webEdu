@@ -78,7 +78,7 @@ License: For each use you must have a valid license purchased only from above li
                 </a>
                 <!--end::Logo-->
                 <!--begin::Wrapper-->
-                <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+                <div class="w-lg-900px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
                     <!--begin::Form-->
                     <form class="form w-100" method="post" onsubmit="return validateForm();">
                         <!--begin::Heading-->

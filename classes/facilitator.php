@@ -1,5 +1,5 @@
 <?php
-require_once("./MyPhpConnections/connection.php");
+require_once("../PhpConnections/connection.php");
 
 Class Facilitators{
 

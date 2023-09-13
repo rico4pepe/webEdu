@@ -1,39 +1,19 @@
 <?php 
-session_start();
+
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
-require_once("../PhpConnections/connection.php");
-require_once('../classes/Products.php');
+require_once('../classes/Courses.php');
+require_once('../classes/SchoolClass.php');
+require_once('../classes/Exam.php');
+require_once('../classes/Sanitize.php');
+$course = new Courses();
 
-$conn = connect();
-$Products = new Products();
-
-$users_query  = $conn->query("SELECT payment_id,  invoice_number  FROM `invoicepayment` where annex_id = '1' ORDER BY payment_id DESC");
-$users_row = $users_query ->fetch((PDO::FETCH_ASSOC));
-$invoice_number = $users_row['invoice_number'];
-
-$annex_id = 1;
-
-if($invoice_number === null or  $invoice_number === "")
-{
-	$users_query  = $conn->query("SELECT invoice_number FROM `invoicecounter` WHERE annex_id = '1'");
-	$users_row = $users_query ->fetch((PDO::FETCH_ASSOC));
-	$invoice_number = $users_row['invoice_number'];
-	$invoice_number = ++$invoice_number;
-	
+$classes = new SchoolClass();
+// print_r($classes->dropdownClass());
+// die();
+$insertExam = new Exam();
 
 
-
-}else{
-	$invoice_number = $users_row['invoice_number'];
-	$invoice_number  = ++$invoice_number;
-
-}
-
-$company_query  = $conn->query("SELECT company_name FROM `company_info`");
-$company_row = $company_query ->fetch((PDO::FETCH_ASSOC));
-$company_name = $company_row['company_name'];
-		
 ?>
 <!DOCTYPE html>
 <!--
@@ -93,1579 +73,7 @@ License: For each use you must have a valid license purchased only from above li
 					</div>
 					<!--end::Brand-->
 					<!--begin::Aside menu-->
-					<?php	include_once("../asideMenu/sidebarMenu.html"); ?>
-					</div>
-						<!--begin::Aside Menu-->
-						<div class="w-100 hover-scroll-overlay-y d-flex pe-2" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu, #kt_aside_menu_wrapper" data-kt-scroll-offset="100">
-							<!--begin::Menu-->
-							<div class="menu menu-column menu-rounded fw-bold my-auto" id="#kt_aside_menu" data-kt-menu="true">
-								<div class="menu-item">
-									<a class="menu-link" href="../../demo3/dist/index.html">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Dashboard</span>
-									</a>
-								</div>
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<span class="menu-link">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Crafted</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<div class="menu-sub menu-sub-accordion">
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Pages</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion menu-active-bg">
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Profile</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/profile/overview.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Overview</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/profile/projects.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Projects</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/profile/campaigns.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Campaigns</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/profile/documents.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Documents</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/profile/followers.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Followers</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/profile/activity.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Activity</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Wizards</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/wizards/horizontal.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Horizontal</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/wizards/vertical.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Vertical</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Search</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/search/horizontal.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Horizontal</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/search/vertical.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Vertical</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Blog</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/blog/home.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Blog Home</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/blog/post.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Blog Post</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/pages/about.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">About Us</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/pages/contact.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Contact Us</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/pages/team.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Our Team</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/pages/licenses.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Licenses</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/pages/sitemap.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Sitemap</span>
-													</a>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Pricing</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/pricing/pricing-1.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Pricing 1</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/pricing/pricing-2.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Pricing 2</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Careers</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/careers/list.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Careers List</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/careers/apply.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Careers Apply</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">FAQ</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/faq/classic.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Classic</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/pages/faq/extended.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Extended</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Account</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion menu-active-bg">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/overview.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Overview</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/settings.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Settings</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/security.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Security</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/billing.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Billing</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/statements.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Statements</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/referrals.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Referrals</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/api-keys.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">API Keys</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/account/logs.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Logs</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Authentication</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion menu-active-bg">
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Basic Layout</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/basic/sign-in.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Sign-in</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/basic/sign-up.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Sign-up</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/basic/two-steps.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Two-steps</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/basic/password-reset.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Password Reset</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/basic/new-password.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">New Password</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Aside Layout</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/aside/sign-in.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Sign-in</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/aside/sign-up.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Sign-up</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/aside/two-steps.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Two-steps</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/aside/password-reset.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Password Reset</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/aside/new-password.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">New Password</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Dark Layout</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/dark/sign-in.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Sign-in</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/dark/sign-up.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Sign-up</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/dark/two-steps.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Two-steps</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/dark/password-reset.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Password Reset</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/layouts/dark/new-password.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">New Password</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/extended/multi-steps-sign-up.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Multi-steps Sign-up</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/extended/free-trial-sign-up.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Free Trial Sign-up</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/extended/coming-soon.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Coming Soon</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/general/welcome.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Welcome Message</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/general/verify-email.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Verify Email</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/general/password-confirmation.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Password Confirmation</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/general/deactivation.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Account Deactivation</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/general/error-404.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Error 404</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/authentication/general/error-500.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Error 500</span>
-													</a>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Email Templates</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/email/verify-email.html" target="blank">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Verify Email</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/email/invitation.html" target="blank">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Account Invitation</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/email/password-reset.html" target="blank">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Password Reset</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/authentication/email/password-change.html" target="blank">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Password Changed</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Modals</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion menu-active-bg">
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">General</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/general/invite-friends.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Invite Friends</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/general/view-users.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">View Users</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/general/upgrade-plan.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Upgrade Plan</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/general/share-earn.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Share &amp; Earn</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Forms</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/forms/new-target.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">New Target</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/forms/new-card.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">New Card</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/forms/new-address.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">New Address</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/forms/create-api-key.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Create API Key</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Wizards</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/wizards/two-factor-authentication.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Two Factor Auth</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/wizards/create-app.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Create App</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/wizards/create-account.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Create Account</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/wizards/create-project.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Create Project</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/wizards/offer-a-deal.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Offer a Deal</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Search</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/search/users.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Users</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/modals/search/select-location.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Select Location</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Widgets</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion menu-active-bg">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/widgets/lists.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Lists</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/widgets/statistics.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Statistics</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/widgets/charts.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Charts</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/widgets/mixed.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Mixed</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/widgets/tables.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Tables</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/widgets/feeds.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Feeds</span>
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-									<span class="menu-link">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Applications</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<div class="menu-sub menu-sub-accordion">
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Projects</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/list.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">My Projects</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/project.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">View Project</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/targets.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Targets</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/budget.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Budget</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/users.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Users</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/files.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Files</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/activity.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Activity</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/projects/settings.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Settings</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">eCommerce</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Catalog</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/ecommerce/catalog/products.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Products</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/ecommerce/catalog/categories.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Categories</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/ecommerce/catalog/add-product.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Add Product</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/ecommerce/catalog/edit-product.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Edit Product</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/ecommerce/catalog/add-category.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Add Category</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/ecommerce/catalog/edit-category.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Edit Category</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="#" title="Coming soon" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Sales</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="#" title="Coming soon" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Customers</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="#" title="Coming soon" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Reports</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="#" title="Coming soon" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Settings</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Customers</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/customers/getting-started.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Getting Started</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/customers/list.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Customer Listing</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/customers/view.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Customer Details</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Subscriptions</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/subscriptions/getting-started.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Getting Started</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/subscriptions/list.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Subscription List</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/subscriptions/add.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Add Subscription</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/subscriptions/view.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">View Subscription</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Invoice Manager</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">View Invoices</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion menu-active-bg">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/invoices/view/invoice-1.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Invoice 1</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/invoices/view/invoice-2.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Invoice 2</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link active" href="../../demo3/dist/apps/invoices/create.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Create Invoice</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">User Management</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Users</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/user-management/users/list.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Users List</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/user-management/users/view.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">View User</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Roles</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/user-management/roles/list.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Roles List</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/user-management/roles/view.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">View Role</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/user-management/permissions.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Permissions</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Support Center</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/support-center/overview.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Overview</span>
-													</a>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Tickets</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/support-center/tickets/list.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Tickets List</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/support-center/tickets/view.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">View Ticket</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1">
-													<span class="menu-link">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Tutorials</span>
-														<span class="menu-arrow"></span>
-													</span>
-													<div class="menu-sub menu-sub-accordion">
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/support-center/tutorials/list.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Tutorials List</span>
-															</a>
-														</div>
-														<div class="menu-item">
-															<a class="menu-link" href="../../demo3/dist/apps/support-center/tutorials/post.html">
-																<span class="menu-bullet">
-																	<span class="bullet bullet-dot"></span>
-																</span>
-																<span class="menu-title">Tutorial Post</span>
-															</a>
-														</div>
-													</div>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/support-center/faq.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">FAQ</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/support-center/licenses.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Licenses</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/support-center/contact.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Contact Us</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div class="menu-item">
-											<a class="menu-link" href="../../demo3/dist/apps/calendar.html">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Calendar</span>
-											</a>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Chat</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/chat/private.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Private Chat</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/chat/group.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Group Chat</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/chat/drawer.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Drawer Chat</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">File Manager</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/file-manager/folders.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Folders</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/file-manager/files.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Files</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/file-manager/blank.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Blank Directory</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/file-manager/settings.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Settings</span>
-													</a>
-												</div>
-											</div>
-										</div>
-										<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-											<span class="menu-link">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Inbox</span>
-												<span class="menu-arrow"></span>
-											</span>
-											<div class="menu-sub menu-sub-accordion">
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/inbox/listing.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Messages</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/inbox/compose.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">Compose</span>
-													</a>
-												</div>
-												<div class="menu-item">
-													<a class="menu-link" href="../../demo3/dist/apps/inbox/reply.html">
-														<span class="menu-bullet">
-															<span class="bullet bullet-dot"></span>
-														</span>
-														<span class="menu-title">View &amp; Reply</span>
-													</a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link" href="https://preview.keenthemes.com/metronic8/demo3/layout-builder.html">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Layout Builder</span>
-									</a>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link" href="../../demo3/dist/documentation/base/utilities.html">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Components</span>
-									</a>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link" href="../../demo3/dist/documentation/getting-started.html">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Documentation</span>
-									</a>
-								</div>
-								<div class="menu-item">
-									<a class="menu-link" href="../../demo3/dist/documentation/getting-started/changelog.html">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
-											<span class="svg-icon svg-icon-5">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
-													<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<span class="menu-title">Changelog v8.0.32</span>
-									</a>
-								</div>
-							</div>
-							<!--end::Menu-->
-						</div>
-						<!--end::Aside Menu-->
+								<?php	include_once("../asideMenu/sidebarMenu.html"); ;?>
 					</div>
 					<!--end::Aside menu-->
 					<!--begin::Footer-->
@@ -1673,7 +81,6 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::User panel-->
 						<div class="d-flex flex-stack">
 							<!--begin::Wrapper-->
-							
 							<div class="d-flex align-items-center">
 								<!--begin::Avatar-->
 								<div class="symbol symbol-circle symbol-40px">
@@ -1886,1157 +293,435 @@ License: For each use you must have a valid license purchased only from above li
 				<!--begin::Wrapper-->
 				<div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
 					<!--begin::Header-->
-					<div id="kt_header" class="header">
-						<!--begin::Container-->
-						<div class="container d-flex align-items-center justify-content-between" id="kt_header_container">
-							<!--begin::Page title-->
-							<div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-2 pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
-								<!--begin::Heading-->
-								<h1 class="d-flex flex-column text-dark fw-bolder my-0 fs-1">Create</h1>
-								<!--end::Heading-->
-								<!--begin::Breadcrumb-->
-								<ul class="breadcrumb breadcrumb-dot fw-bold fs-base my-1">
-									<li class="breadcrumb-item text-muted">
-										<a href="../../demo3/dist/index.html" class="text-muted">Home</a>
-									</li>
-									<li class="breadcrumb-item text-muted">Applications</li>
-									<li class="breadcrumb-item text-muted">Invoice Manager</li>
-									<li class="breadcrumb-item text-dark">Create Invoice</li>
-								</ul>
-								<!--end::Breadcrumb-->
-							</div>
-							<!--end::Page title=-->
-							<!--begin::Wrapper-->
-							<div class="d-flex d-lg-none align-items-center ms-n2 me-2">
-								<!--begin::Aside mobile toggle-->
-								<div class="btn btn-icon btn-active-icon-primary" id="kt_aside_toggle">
-									<!--begin::Svg Icon | path: icons/duotune/abstract/abs015.svg-->
-									<span class="svg-icon svg-icon-1 mt-1">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-											<path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="black" />
-											<path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="black" />
-										</svg>
-									</span>
-									<!--end::Svg Icon-->
-								</div>
-								<!--end::Aside mobile toggle-->
-								<!--begin::Logo-->
-								<a href="../../demo3/dist/index.html" class="d-flex align-items-center">
-									<img alt="Logo" src="assets/media/logos/logo-demo3-default.svg" class="h-20px" />
-								</a>
-								<!--end::Logo-->
-							</div>
-							<!--end::Wrapper-->
-							<!--begin::Topbar-->
-							<div class="d-flex align-items-center flex-shrink-0">
-								<!--begin::Search-->
-								<div id="kt_header_search" class="d-flex align-items-center w-125px w-md-150px w-lg-225px" data-kt-search-keypress="true" data-kt-search-min-length="2" data-kt-search-enter="enter" data-kt-search-layout="menu" data-kt-menu-trigger="auto" data-kt-menu-permanent="true" data-kt-menu-placement="bottom-end">
-									<!--begin::Form-->
-									<form data-kt-search-element="form" method="Post" class="w-100 position-relative" autocomplete="off">
-										<!--begin::Hidden input(Added to disable form autocomplete)-->
-										<input type="hidden" />
-										<!--end::Hidden input-->
-										<!--begin::Icon-->
-										<!--begin::Svg Icon | path: icons/duotune/general/gen004.svg-->
-										<!-- <span class="svg-icon svg-icon-2 svg-icon-gray-700 position-absolute top-50 translate-middle-y ms-4">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<path d="M21.7 18.9L18.6 15.8C17.9 16.9 16.9 17.9 15.8 18.6L18.9 21.7C19.3 22.1 19.9 22.1 20.3 21.7L21.7 20.3C22.1 19.9 22.1 19.3 21.7 18.9Z" fill="black" />
-												<path opacity="0.3" d="M11 20C6 20 2 16 2 11C2 6 6 2 11 2C16 2 20 6 20 11C20 16 16 20 11 20ZM11 4C7.1 4 4 7.1 4 11C4 14.9 7.1 18 11 18C14.9 18 18 14.9 18 11C18 7.1 14.9 4 11 4ZM8 11C8 9.3 9.3 8 11 8C11.6 8 12 7.6 12 7C12 6.4 11.6 6 11 6C8.2 6 6 8.2 6 11C6 11.6 6.4 12 7 12C7.6 12 8 11.6 8 11Z" fill="black" />
-											</svg>
-										</span> -->
-										<!--end::Svg Icon-->
-										<!--end::Icon-->
-										<!--begin::Input-->
-										<!-- <input type="text" class="form-control bg-transparent ps-13 fs-7 h-40px" name="search" value="" placeholder="Quick Search" data-kt-search-element="input" /> -->
-										<!--end::Input-->
-										<!--begin::Spinner-->
-										<span class="position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-5" data-kt-search-element="spinner">
-											<span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
-										</span>
-										<!--end::Spinner-->
-										<!--begin::Reset-->
-										<span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-4" data-kt-search-element="clear">
-											<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-											<span class="svg-icon svg-icon-2 svg-icon-lg-1 me-0">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-													<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-													<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
-												</svg>
-											</span>
-											<!--end::Svg Icon-->
-										</span>
-										<!--end::Reset-->
-									</form>
-									<!--end::Form-->
-									<!--begin::Menu-->
-									<div data-kt-search-element="content" class="menu menu-sub menu-sub-dropdown w-300px w-md-350px py-7 px-7 overflow-hidden">
-										<!--begin::Wrapper-->
-										<div data-kt-search-element="wrapper">
-											<!--begin::Recently viewed-->
-											<div data-kt-search-element="results" class="d-none">
-												<!--begin::Items-->
-												<div class="scroll-y mh-200px mh-lg-350px">
-													<!--begin::Category title-->
-													<h3 class="fs-5 text-muted m-0 pb-5" data-kt-search-element="category-title">Users</h3>
-													<!--end::Category title-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<img src="assets/media/avatars/150-1.jpg" alt="" />
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Karina Clark</span>
-															<span class="fs-7 fw-bold text-muted">Marketing Manager</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<img src="assets/media/avatars/150-3.jpg" alt="" />
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Olivia Bold</span>
-															<span class="fs-7 fw-bold text-muted">Software Engineer</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<img src="assets/media/avatars/150-8.jpg" alt="" />
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Ana Clark</span>
-															<span class="fs-7 fw-bold text-muted">UI/UX Designer</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<img src="assets/media/avatars/150-11.jpg" alt="" />
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Nick Pitola</span>
-															<span class="fs-7 fw-bold text-muted">Art Director</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<img src="assets/media/avatars/150-12.jpg" alt="" />
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Edward Kulnic</span>
-															<span class="fs-7 fw-bold text-muted">System Administrator</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Category title-->
-													<h3 class="fs-5 text-muted m-0 pt-5 pb-5" data-kt-search-element="category-title">Customers</h3>
-													<!--end::Category title-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<img class="w-20px h-20px" src="assets/media/svg/brand-logos/volicity-9.svg" alt="" />
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Company Rbranding</span>
-															<span class="fs-7 fw-bold text-muted">UI Design</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<img class="w-20px h-20px" src="assets/media/svg/brand-logos/tvit.svg" alt="" />
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Company Re-branding</span>
-															<span class="fs-7 fw-bold text-muted">Web Development</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<img class="w-20px h-20px" src="assets/media/svg/misc/infography.svg" alt="" />
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Business Analytics App</span>
-															<span class="fs-7 fw-bold text-muted">Administration</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<img class="w-20px h-20px" src="assets/media/svg/brand-logos/leaf.svg" alt="" />
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">EcoLeaf App Launch</span>
-															<span class="fs-7 fw-bold text-muted">Marketing</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<img class="w-20px h-20px" src="assets/media/svg/brand-logos/tower.svg" alt="" />
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column justify-content-start fw-bold">
-															<span class="fs-6 fw-bold">Tower Group Website</span>
-															<span class="fs-7 fw-bold text-muted">Google Adwords</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Category title-->
-													<h3 class="fs-5 text-muted m-0 pt-5 pb-5" data-kt-search-element="category-title">Projects</h3>
-													<!--end::Category title-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path opacity="0.3" d="M19 22H5C4.4 22 4 21.6 4 21V3C4 2.4 4.4 2 5 2H14L20 8V21C20 21.6 19.6 22 19 22ZM12.5 18C12.5 17.4 12.6 17.5 12 17.5H8.5C7.9 17.5 8 17.4 8 18C8 18.6 7.9 18.5 8.5 18.5L12 18C12.6 18 12.5 18.6 12.5 18ZM16.5 13C16.5 12.4 16.6 12.5 16 12.5H8.5C7.9 12.5 8 12.4 8 13C8 13.6 7.9 13.5 8.5 13.5H15.5C16.1 13.5 16.5 13.6 16.5 13ZM12.5 8C12.5 7.4 12.6 7.5 12 7.5H8C7.4 7.5 7.5 7.4 7.5 8C7.5 8.6 7.4 8.5 8 8.5H12C12.6 8.5 12.5 8.6 12.5 8Z" fill="black" />
-																		<rect x="7" y="17" width="6" height="2" rx="1" fill="black" />
-																		<rect x="7" y="12" width="10" height="2" rx="1" fill="black" />
-																		<rect x="7" y="7" width="6" height="2" rx="1" fill="black" />
-																		<path d="M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<span class="fs-6 fw-bold">Si-Fi Project by AU Themes</span>
-															<span class="fs-7 fw-bold text-muted">#45670</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/general/gen032.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<rect x="8" y="9" width="3" height="10" rx="1.5" fill="black" />
-																		<rect opacity="0.5" x="13" y="5" width="3" height="14" rx="1.5" fill="black" />
-																		<rect x="18" y="11" width="3" height="8" rx="1.5" fill="black" />
-																		<rect x="3" y="13" width="3" height="6" rx="1.5" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<span class="fs-6 fw-bold">Shopix Mobile App Planning</span>
-															<span class="fs-7 fw-bold text-muted">#45690</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/communication/com012.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path opacity="0.3" d="M20 3H4C2.89543 3 2 3.89543 2 5V16C2 17.1046 2.89543 18 4 18H4.5C5.05228 18 5.5 18.4477 5.5 19V21.5052C5.5 22.1441 6.21212 22.5253 6.74376 22.1708L11.4885 19.0077C12.4741 18.3506 13.6321 18 14.8167 18H20C21.1046 18 22 17.1046 22 16V5C22 3.89543 21.1046 3 20 3Z" fill="black" />
-																		<rect x="6" y="12" width="7" height="2" rx="1" fill="black" />
-																		<rect x="6" y="7" width="12" height="2" rx="1" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<span class="fs-6 fw-bold">Finance Monitoring SAAS Discussion</span>
-															<span class="fs-7 fw-bold text-muted">#21090</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<a href="#" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/communication/com006.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path opacity="0.3" d="M22 12C22 17.5 17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12ZM12 7C10.3 7 9 8.3 9 10C9 11.7 10.3 13 12 13C13.7 13 15 11.7 15 10C15 8.3 13.7 7 12 7Z" fill="black" />
-																		<path d="M12 22C14.6 22 17 21 18.7 19.4C17.9 16.9 15.2 15 12 15C8.8 15 6.09999 16.9 5.29999 19.4C6.99999 21 9.4 22 12 22Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<span class="fs-6 fw-bold">Dashboard Analitics Launch</span>
-															<span class="fs-7 fw-bold text-muted">#34560</span>
-														</div>
-														<!--end::Title-->
-													</a>
-													<!--end::Item-->
-												</div>
-												<!--end::Items-->
-											</div>
-											<!--end::Recently viewed-->
-											<!--begin::Recently viewed-->
-											<div data-kt-search-element="main">
-												<!--begin::Heading-->
-												<div class="d-flex flex-stack fw-bold mb-5">
-													<!--begin::Label-->
-													<span class="text-muted fs-6 me-2">Recently Searched</span>
-													<!--end::Label-->
-													<!--begin::Toolbar-->
-													<div class="d-flex" data-kt-search-element="toolbar">
-														<!--begin::Preferences toggle-->
-														<div data-kt-search-element="preferences-show" class="btn btn-icon w-20px btn-sm btn-active-color-primary me-2 data-bs-toggle=" title="Show search preferences">
-															<!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
-															<span class="svg-icon svg-icon-1">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<path opacity="0.3" d="M22.1 11.5V12.6C22.1 13.2 21.7 13.6 21.2 13.7L19.9 13.9C19.7 14.7 19.4 15.5 18.9 16.2L19.7 17.2999C20 17.6999 20 18.3999 19.6 18.7999L18.8 19.6C18.4 20 17.8 20 17.3 19.7L16.2 18.9C15.5 19.3 14.7 19.7 13.9 19.9L13.7 21.2C13.6 21.7 13.1 22.1 12.6 22.1H11.5C10.9 22.1 10.5 21.7 10.4 21.2L10.2 19.9C9.4 19.7 8.6 19.4 7.9 18.9L6.8 19.7C6.4 20 5.7 20 5.3 19.6L4.5 18.7999C4.1 18.3999 4.1 17.7999 4.4 17.2999L5.2 16.2C4.8 15.5 4.4 14.7 4.2 13.9L2.9 13.7C2.4 13.6 2 13.1 2 12.6V11.5C2 10.9 2.4 10.5 2.9 10.4L4.2 10.2C4.4 9.39995 4.7 8.60002 5.2 7.90002L4.4 6.79993C4.1 6.39993 4.1 5.69993 4.5 5.29993L5.3 4.5C5.7 4.1 6.3 4.10002 6.8 4.40002L7.9 5.19995C8.6 4.79995 9.4 4.39995 10.2 4.19995L10.4 2.90002C10.5 2.40002 11 2 11.5 2H12.6C13.2 2 13.6 2.40002 13.7 2.90002L13.9 4.19995C14.7 4.39995 15.5 4.69995 16.2 5.19995L17.3 4.40002C17.7 4.10002 18.4 4.1 18.8 4.5L19.6 5.29993C20 5.69993 20 6.29993 19.7 6.79993L18.9 7.90002C19.3 8.60002 19.7 9.39995 19.9 10.2L21.2 10.4C21.7 10.5 22.1 11 22.1 11.5ZM12.1 8.59998C10.2 8.59998 8.6 10.2 8.6 12.1C8.6 14 10.2 15.6 12.1 15.6C14 15.6 15.6 14 15.6 12.1C15.6 10.2 14 8.59998 12.1 8.59998Z" fill="black" />
-																	<path d="M17.1 12.1C17.1 14.9 14.9 17.1 12.1 17.1C9.30001 17.1 7.10001 14.9 7.10001 12.1C7.10001 9.29998 9.30001 7.09998 12.1 7.09998C14.9 7.09998 17.1 9.29998 17.1 12.1ZM12.1 10.1C11 10.1 10.1 11 10.1 12.1C10.1 13.2 11 14.1 12.1 14.1C13.2 14.1 14.1 13.2 14.1 12.1C14.1 11 13.2 10.1 12.1 10.1Z" fill="black" />
-																</svg>
-															</span>
-															<!--end::Svg Icon-->
-														</div>
-														<!--end::Preferences toggle-->
-														<!--begin::Advanced search toggle-->
-														<div data-kt-search-element="advanced-options-form-show" class="btn btn-icon w-20px btn-sm btn-active-color-primary me-n1" data-bs-toggle="tooltip" title="Show more search options">
-															<!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-															<span class="svg-icon svg-icon-2">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
-																</svg>
-															</span>
-															<!--end::Svg Icon-->
-														</div>
-														<!--end::Advanced search toggle-->
-													</div>
-													<!--end::Toolbar-->
-												</div>
-												<!--end::Heading-->
-												<!--begin::Items-->
-												<div class="scroll-y mh-200px mh-lg-325px">
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/electronics/elc004.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path d="M2 16C2 16.6 2.4 17 3 17H21C21.6 17 22 16.6 22 16V15H2V16Z" fill="black" />
-																		<path opacity="0.3" d="M21 3H3C2.4 3 2 3.4 2 4V15H22V4C22 3.4 21.6 3 21 3Z" fill="black" />
-																		<path opacity="0.3" d="M15 17H9V20H15V17Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">BoomApp by Keenthemes</a>
-															<span class="fs-7 text-muted fw-bold">#45789</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/graphs/gra001.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path opacity="0.3" d="M14 3V21H10V3C10 2.4 10.4 2 11 2H13C13.6 2 14 2.4 14 3ZM7 14H5C4.4 14 4 14.4 4 15V21H8V15C8 14.4 7.6 14 7 14Z" fill="black" />
-																		<path d="M21 20H20V8C20 7.4 19.6 7 19 7H17C16.4 7 16 7.4 16 8V20H3C2.4 20 2 20.4 2 21C2 21.6 2.4 22 3 22H21C21.6 22 22 21.6 22 21C22 20.4 21.6 20 21 20Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">"Kept API Project Meeting</a>
-															<span class="fs-7 text-muted fw-bold">#84050</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/graphs/gra006.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path d="M13 5.91517C15.8 6.41517 18 8.81519 18 11.8152C18 12.5152 17.9 13.2152 17.6 13.9152L20.1 15.3152C20.6 15.6152 21.4 15.4152 21.6 14.8152C21.9 13.9152 22.1 12.9152 22.1 11.8152C22.1 7.01519 18.8 3.11521 14.3 2.01521C13.7 1.91521 13.1 2.31521 13.1 3.01521V5.91517H13Z" fill="black" />
-																		<path opacity="0.3" d="M19.1 17.0152C19.7 17.3152 19.8 18.1152 19.3 18.5152C17.5 20.5152 14.9 21.7152 12 21.7152C9.1 21.7152 6.50001 20.5152 4.70001 18.5152C4.30001 18.0152 4.39999 17.3152 4.89999 17.0152L7.39999 15.6152C8.49999 16.9152 10.2 17.8152 12 17.8152C13.8 17.8152 15.5 17.0152 16.6 15.6152L19.1 17.0152ZM6.39999 13.9151C6.19999 13.2151 6 12.5152 6 11.8152C6 8.81517 8.2 6.41515 11 5.91515V3.01519C11 2.41519 10.4 1.91519 9.79999 2.01519C5.29999 3.01519 2 7.01517 2 11.8152C2 12.8152 2.2 13.8152 2.5 14.8152C2.7 15.4152 3.4 15.7152 4 15.3152L6.39999 13.9151Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">"KPI Monitoring App Launch</a>
-															<span class="fs-7 text-muted fw-bold">#84250</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/graphs/gra002.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path opacity="0.3" d="M20 8L12.5 5L5 14V19H20V8Z" fill="black" />
-																		<path d="M21 18H6V3C6 2.4 5.6 2 5 2C4.4 2 4 2.4 4 3V18H3C2.4 18 2 18.4 2 19C2 19.6 2.4 20 3 20H4V21C4 21.6 4.4 22 5 22C5.6 22 6 21.6 6 21V20H21C21.6 20 22 19.6 22 19C22 18.4 21.6 18 21 18Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Reference FAQ</a>
-															<span class="fs-7 text-muted fw-bold">#67945</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/communication/com010.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path d="M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z" fill="black" />
-																		<path opacity="0.3" d="M22 9.72498V20.725C22 21.325 21.6 21.725 21 21.725H3C2.4 21.725 2 21.325 2 20.725V9.72498L11.4 17.225C11.8 17.525 12.3 17.525 12.6 17.225L22 9.72498ZM15 11.725H18L14 7.72498V10.725C14 11.325 14.4 11.725 15 11.725Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">"FitPro App Development</a>
-															<span class="fs-7 text-muted fw-bold">#84250</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/finance/fin001.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path d="M20 19.725V18.725C20 18.125 19.6 17.725 19 17.725H5C4.4 17.725 4 18.125 4 18.725V19.725H3C2.4 19.725 2 20.125 2 20.725V21.725H22V20.725C22 20.125 21.6 19.725 21 19.725H20Z" fill="black" />
-																		<path opacity="0.3" d="M22 6.725V7.725C22 8.325 21.6 8.725 21 8.725H18C18.6 8.725 19 9.125 19 9.725C19 10.325 18.6 10.725 18 10.725V15.725C18.6 15.725 19 16.125 19 16.725V17.725H15V16.725C15 16.125 15.4 15.725 16 15.725V10.725C15.4 10.725 15 10.325 15 9.725C15 9.125 15.4 8.725 16 8.725H13C13.6 8.725 14 9.125 14 9.725C14 10.325 13.6 10.725 13 10.725V15.725C13.6 15.725 14 16.125 14 16.725V17.725H10V16.725C10 16.125 10.4 15.725 11 15.725V10.725C10.4 10.725 10 10.325 10 9.725C10 9.125 10.4 8.725 11 8.725H8C8.6 8.725 9 9.125 9 9.725C9 10.325 8.6 10.725 8 10.725V15.725C8.6 15.725 9 16.125 9 16.725V17.725H5V16.725C5 16.125 5.4 15.725 6 15.725V10.725C5.4 10.725 5 10.325 5 9.725C5 9.125 5.4 8.725 6 8.725H3C2.4 8.725 2 8.325 2 7.725V6.725L11 2.225C11.6 1.925 12.4 1.925 13.1 2.225L22 6.725ZM12 3.725C11.2 3.725 10.5 4.425 10.5 5.225C10.5 6.025 11.2 6.725 12 6.725C12.8 6.725 13.5 6.025 13.5 5.225C13.5 4.425 12.8 3.725 12 3.725Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Shopix Mobile App</a>
-															<span class="fs-7 text-muted fw-bold">#45690</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-													<!--begin::Item-->
-													<div class="d-flex align-items-center mb-5">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-light">
-																<!--begin::Svg Icon | path: icons/duotune/graphs/gra002.svg-->
-																<span class="svg-icon svg-icon-2 svg-icon-primary">
-																	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																		<path opacity="0.3" d="M20 8L12.5 5L5 14V19H20V8Z" fill="black" />
-																		<path d="M21 18H6V3C6 2.4 5.6 2 5 2C4.4 2 4 2.4 4 3V18H3C2.4 18 2 18.4 2 19C2 19.6 2.4 20 3 20H4V21C4 21.6 4.4 22 5 22C5.6 22 6 21.6 6 21V20H21C21.6 20 22 19.6 22 19C22 18.4 21.6 18 21 18Z" fill="black" />
-																	</svg>
-																</span>
-																<!--end::Svg Icon-->
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="d-flex flex-column">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">"Landing UI Design" Launch</a>
-															<span class="fs-7 text-muted fw-bold">#24005</span>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Item-->
-												</div>
-												<!--end::Items-->
-											</div>
-											<!--end::Recently viewed-->
-											<!--begin::Empty-->
-											<div data-kt-search-element="empty" class="text-center d-none">
-												<!--begin::Icon-->
-												<div class="pt-10 pb-10">
-													<!--begin::Svg Icon | path: icons/duotune/files/fil024.svg-->
-													<span class="svg-icon svg-icon-4x opacity-50">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-															<path opacity="0.3" d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="black" />
-															<path d="M20 8L14 2V6C14 7.10457 14.8954 8 16 8H20Z" fill="black" />
-															<rect x="13.6993" y="13.6656" width="4.42828" height="1.73089" rx="0.865447" transform="rotate(45 13.6993 13.6656)" fill="black" />
-															<path d="M15 12C15 14.2 13.2 16 11 16C8.8 16 7 14.2 7 12C7 9.8 8.8 8 11 8C13.2 8 15 9.8 15 12ZM11 9.6C9.68 9.6 8.6 10.68 8.6 12C8.6 13.32 9.68 14.4 11 14.4C12.32 14.4 13.4 13.32 13.4 12C13.4 10.68 12.32 9.6 11 9.6Z" fill="black" />
-														</svg>
-													</span>
-													<!--end::Svg Icon-->
-												</div>
-												<!--end::Icon-->
-												<!--begin::Message-->
-												<div class="pb-15 fw-bold">
-													<h3 class="text-gray-600 fs-5 mb-2">No result found</h3>
-													<div class="text-muted fs-7">Please try again with a different query</div>
-												</div>
-												<!--end::Message-->
-											</div>
-											<!--end::Empty-->
-										</div>
-										<!--end::Wrapper-->
-										<!--begin::Preferences-->
-										<form data-kt-search-element="advanced-options-form" class="pt-1 d-none">
-											<!--begin::Heading-->
-											<h3 class="fw-bold text-dark mb-7">Advanced Search</h3>
-											<!--end::Heading-->
-											<!--begin::Input group-->
-											<div class="mb-5">
-												<input type="text" class="form-control form-control-sm form-control-solid" placeholder="Contains the word" name="query" />
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="mb-5">
-												<!--begin::Radio group-->
-												<div class="nav-group nav-group-fluid">
-													<!--begin::Option-->
-													<label>
-														<input type="radio" class="btn-check" name="type" value="has" checked="checked" />
-														<span class="btn btn-sm btn-color-muted btn-active btn-active-primary">All</span>
-													</label>
-													<!--end::Option-->
-													<!--begin::Option-->
-													<label>
-														<input type="radio" class="btn-check" name="type" value="users" />
-														<span class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4">Users</span>
-													</label>
-													<!--end::Option-->
-													<!--begin::Option-->
-													<label>
-														<input type="radio" class="btn-check" name="type" value="orders" />
-														<span class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4">Orders</span>
-													</label>
-													<!--end::Option-->
-													<!--begin::Option-->
-													<label>
-														<input type="radio" class="btn-check" name="type" value="projects" />
-														<span class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4">Projects</span>
-													</label>
-													<!--end::Option-->
-												</div>
-												<!--end::Radio group-->
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="mb-5">
-												<input type="text" name="assignedto" class="form-control form-control-sm form-control-solid" placeholder="Assigned to" value="" />
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="mb-5">
-												<input type="text" name="collaborators" class="form-control form-control-sm form-control-solid" placeholder="Collaborators" value="" />
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="mb-5">
-												<!--begin::Radio group-->
-												<div class="nav-group nav-group-fluid">
-													<!--begin::Option-->
-													<label>
-														<input type="radio" class="btn-check" name="attachment" value="has" checked="checked" />
-														<span class="btn btn-sm btn-color-muted btn-active btn-active-primary">Has attachment</span>
-													</label>
-													<!--end::Option-->
-													<!--begin::Option-->
-													<label>
-														<input type="radio" class="btn-check" name="attachment" value="any" />
-														<span class="btn btn-sm btn-color-muted btn-active btn-active-primary px-4">Any</span>
-													</label>
-													<!--end::Option-->
-												</div>
-												<!--end::Radio group-->
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="mb-5">
-												<select name="timezone" aria-label="Select a Timezone" data-control="select2" data-placeholder="date_period" class="form-select form-select-sm form-select-solid">
-													<option value="next">Within the next</option>
-													<option value="last">Within the last</option>
-													<option value="between">Between</option>
-													<option value="on">On</option>
-												</select>
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="row mb-8">
-												<!--begin::Col-->
-												<div class="col-6">
-													<input type="number" name="date_number" class="form-control form-control-sm form-control-solid" placeholder="Lenght" value="" />
-												</div>
-												<!--end::Col-->
-												<!--begin::Col-->
-												<div class="col-6">
-													<select name="date_typer" aria-label="Select a Timezone" data-control="select2" data-placeholder="Period" class="form-select form-select-sm form-select-solid">
-														<option value="days">Days</option>
-														<option value="weeks">Weeks</option>
-														<option value="months">Months</option>
-														<option value="years">Years</option>
-													</select>
-												</div>
-												<!--end::Col-->
-											</div>
-											<!--end::Input group-->
-											<!--begin::Actions-->
-											<div class="d-flex justify-content-end">
-												<button type="reset" class="btn btn-sm btn-light fw-bolder btn-active-light-primary me-2" data-kt-search-element="advanced-options-form-cancel">Cancel</button>
-												<a href="../../demo3/dist/pages/search/horizontal.html" class="btn btn-sm fw-bolder btn-primary" data-kt-search-element="advanced-options-form-search">Search</a>
-											</div>
-											<!--end::Actions-->
-										</form>
-										<!--end::Preferences-->
-										<!--begin::Preferences-->
-										<form data-kt-search-element="preferences" class="pt-1 d-none">
-											<!--begin::Heading-->
-											<h3 class="fw-bold text-dark mb-7">Search Preferences</h3>
-											<!--end::Heading-->
-											<!--begin::Input group-->
-											<div class="pb-4 border-bottom">
-												<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">
-													<span class="form-check-label text-gray-700 fs-6 fw-bold ms-0 me-2">Projects</span>
-													<input class="form-check-input" type="checkbox" value="1" checked="checked" />
-												</label>
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="py-4 border-bottom">
-												<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">
-													<span class="form-check-label text-gray-700 fs-6 fw-bold ms-0 me-2">Targets</span>
-													<input class="form-check-input" type="checkbox" value="1" checked="checked" />
-												</label>
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="py-4 border-bottom">
-												<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">
-													<span class="form-check-label text-gray-700 fs-6 fw-bold ms-0 me-2">Affiliate Programs</span>
-													<input class="form-check-input" type="checkbox" value="1" />
-												</label>
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="py-4 border-bottom">
-												<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">
-													<span class="form-check-label text-gray-700 fs-6 fw-bold ms-0 me-2">Referrals</span>
-													<input class="form-check-input" type="checkbox" value="1" checked="checked" />
-												</label>
-											</div>
-											<!--end::Input group-->
-											<!--begin::Input group-->
-											<div class="py-4 border-bottom">
-												<label class="form-check form-switch form-switch-sm form-check-custom form-check-solid flex-stack">
-													<span class="form-check-label text-gray-700 fs-6 fw-bold ms-0 me-2">Users</span>
-													<input class="form-check-input" type="checkbox" value="1" />
-												</label>
-											</div>
-											<!--end::Input group-->
-											<!--begin::Actions-->
-											<div class="d-flex justify-content-end pt-7">
-												<button type="reset" class="btn btn-sm btn-light fw-bolder btn-active-light-primary me-2" data-kt-search-element="preferences-dismiss">Cancel</button>
-												<button type="submit" class="btn btn-sm fw-bolder btn-primary">Save Changes</button>
-											</div>
-											<!--end::Actions-->
-										</form>
-										<!--end::Preferences-->
-									</div>
-									<!--end::Menu-->
-								</div>
-								<!--end::Search-->
-								<!--begin::Activities-->
-								<div class="d-flex align-items-center ms-3 ms-lg-4">
-									<!--begin::Drawer toggle-->
-									<div class="btn btn-icon btn-color-gray-700 btn-active-color-primary btn-outline btn-outline-secondary w-40px h-40px" id="kt_activities_toggle">
-										<!--begin::Svg Icon | path: icons/duotune/general/gen007.svg-->
-										<span class="svg-icon svg-icon-1">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="black" />
-												<path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="black" />
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-									</div>
-									<!--end::Drawer toggle-->
-								</div>
-								<!--end::Activities-->
-								<!--begin::Chat-->
-								<div class="d-flex d-none align-items-center ms-3 ms-lg-4">
-									<!--begin::Drawer wrapper-->
-									<div class="btn btn-icon btn-color-gray-700 btn-active-color-primary btn-outline btn-outline-secondary position-relative w-40px h-40px" id="kt_drawer_chat_toggle">
-										<!--begin::Svg Icon | path: icons/duotune/communication/com003.svg-->
-										<span class="svg-icon svg-icon-1">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="black" />
-												<path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="black" />
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-										<!--begin::Bullet-->
-										<span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
-										<!--end::Bullet-->
-									</div>
-									<!--end::Drawer wrapper-->
-								</div>
-								<!--end::Chat-->
-								<!--begin::Sidebar Toggler-->
-								<button class="btn btn-icon btn-active-icon-primary d-xxl-none ms-2 me-n2" id="kt_sidebar_toggler">
-									<!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
-									<span class="svg-icon svg-icon-2x">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-											<path opacity="0.3" d="M22.1 11.5V12.6C22.1 13.2 21.7 13.6 21.2 13.7L19.9 13.9C19.7 14.7 19.4 15.5 18.9 16.2L19.7 17.2999C20 17.6999 20 18.3999 19.6 18.7999L18.8 19.6C18.4 20 17.8 20 17.3 19.7L16.2 18.9C15.5 19.3 14.7 19.7 13.9 19.9L13.7 21.2C13.6 21.7 13.1 22.1 12.6 22.1H11.5C10.9 22.1 10.5 21.7 10.4 21.2L10.2 19.9C9.4 19.7 8.6 19.4 7.9 18.9L6.8 19.7C6.4 20 5.7 20 5.3 19.6L4.5 18.7999C4.1 18.3999 4.1 17.7999 4.4 17.2999L5.2 16.2C4.8 15.5 4.4 14.7 4.2 13.9L2.9 13.7C2.4 13.6 2 13.1 2 12.6V11.5C2 10.9 2.4 10.5 2.9 10.4L4.2 10.2C4.4 9.39995 4.7 8.60002 5.2 7.90002L4.4 6.79993C4.1 6.39993 4.1 5.69993 4.5 5.29993L5.3 4.5C5.7 4.1 6.3 4.10002 6.8 4.40002L7.9 5.19995C8.6 4.79995 9.4 4.39995 10.2 4.19995L10.4 2.90002C10.5 2.40002 11 2 11.5 2H12.6C13.2 2 13.6 2.40002 13.7 2.90002L13.9 4.19995C14.7 4.39995 15.5 4.69995 16.2 5.19995L17.3 4.40002C17.7 4.10002 18.4 4.1 18.8 4.5L19.6 5.29993C20 5.69993 20 6.29993 19.7 6.79993L18.9 7.90002C19.3 8.60002 19.7 9.39995 19.9 10.2L21.2 10.4C21.7 10.5 22.1 11 22.1 11.5ZM12.1 8.59998C10.2 8.59998 8.6 10.2 8.6 12.1C8.6 14 10.2 15.6 12.1 15.6C14 15.6 15.6 14 15.6 12.1C15.6 10.2 14 8.59998 12.1 8.59998Z" fill="black" />
-											<path d="M17.1 12.1C17.1 14.9 14.9 17.1 12.1 17.1C9.30001 17.1 7.10001 14.9 7.10001 12.1C7.10001 9.29998 9.30001 7.09998 12.1 7.09998C14.9 7.09998 17.1 9.29998 17.1 12.1ZM12.1 10.1C11 10.1 10.1 11 10.1 12.1C10.1 13.2 11 14.1 12.1 14.1C13.2 14.1 14.1 13.2 14.1 12.1C14.1 11 13.2 10.1 12.1 10.1Z" fill="black" />
-										</svg>
-									</span>
-									<!--end::Svg Icon-->
-								</button>
-								<!--end::Sidebar Toggler-->
-							</div>
-							<!--end::Topbar-->
-						</div>
-						<!--end::Container-->
-					</div>
+					
 					<!--end::Header-->
 					<!--begin::Content-->
 					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 						<!--begin::Container-->
 						<div class="container-xxl" id="kt_content_container">
-							<!--begin::Layout-->
-							<div class="d-flex flex-column flex-lg-row">
-								<!--begin::Content-->
-								<div class="flex-lg-row-fluid mb-10 mb-lg-0 me-lg-7 me-xl-10">
-									<!--begin::Card-->
-									<div class="card">
-										<!--begin::Card body-->
-										<div class="card-body p-12">
-											<!--begin::Form-->
-											<form action="" id="kt_invoice_form" method="Post">
-												<!--begin::Wrapper-->
-												<div class="d-flex flex-column align-items-start flex-xxl-row">
-													<!--begin::Input group-->
-													<div class="d-flex align-items-center flex-equal fw-row me-4 order-2" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Specify invoice date">
-														<!--begin::Date-->
-														<div class="fs-6 fw-bolder text-gray-700 text-nowrap">Date:</div>
-														<!--end::Date-->
-														<!--begin::Input-->
-														<div class="position-relative d-flex align-items-center w-150px">
-															<!--begin::Datepicker-->
-															<input class="form-control form-control-transparent fw-bolder pe-5" placeholder="Select date" name="invoice_date" />
-															<!--end::Datepicker-->
-															<!--begin::Icon-->
-															<!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-															<span class="svg-icon svg-icon-2 position-absolute ms-4 end-0">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
-																</svg>
-															</span>
-															<!--end::Svg Icon-->
-															<!--end::Icon-->
-														</div>
-														<!--end::Input-->
-													</div>
-													<!--end::Input group-->
-													<!--begin::Input group-->
-													<div class="d-flex flex-center flex-equal fw-row text-nowrap order-1 order-xxl-2 me-4" data-bs-toggle="tooltip" data-bs-trigger="hover" title="invoice number">
-														<span class="fs-2x fw-bolder text-gray-800">Invoice # <?php echo $invoice_number; ?></span>
-														
-													</div>
-													<!--end::Input group-->
-													<!--begin::Input group-->
-													<div class="d-flex align-items-center justify-content-end flex-equal order-3 fw-row" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Specify invoice due date">
-														<!--begin::Date-->
-														<div class="fs-6 fw-bolder text-gray-700 text-nowrap">Due Date:</div>
-														<!--end::Date-->
-														<!--begin::Input-->
-														<div class="position-relative d-flex align-items-center w-150px">
-															<!--begin::Datepicker-->
-															<input class="form-control form-control-transparent fw-bolder pe-5" placeholder="Select date" name="invoice_due_date" />
-															<!--end::Datepicker-->
-															<!--begin::Icon-->
-															<!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-															<span class="svg-icon svg-icon-2 position-absolute end-0 ms-4">
-																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
-																</svg>
-															</span>
-															<!--end::Svg Icon-->
-															<!--end::Icon-->
-														</div>
-														<!--end::Input-->
-													</div>
-													<!--end::Input group-->
-												</div>
-												<!--end::Top-->
-												<!--begin::Separator-->
-												<div class="separator separator-dashed my-10"></div>
-												<!--end::Separator-->
-												<!--begin::Wrapper-->
-												<div class="mb-0">
-													<!--begin::Row-->
-													<div class="row gx-10 mb-5">
-														<!--begin::Col-->
-														<div class="col-lg-6">
-															<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bill From</label>
-															<!--begin::Input group-->
-															<div class="mb-5">
-																<input type="text" class="form-control form-control-solid"  value="<?php echo $company_name; ?>" disabled />
-															</div>
-															<!--end::Input group-->
-															<!--begin::Input group-->
-															
-															<!--end::Input group-->
-															<!--begin::Input group-->
-															
-															<!--end::Input group-->
-														</div>
-														<!--end::Col-->
-														<!--begin::Col-->
-														<div class="col-lg-6">
-															<label class="form-label fs-6 fw-bolder text-gray-700 mb-3">Bill To</label>
-															<!--begin::Input group-->
-															<div class="mb-5">
-																<input type="text" class="form-control form-control-solid" name = "whomTo" placeholder="Name" />
-															</div>
-															<!--end::Input group-->
-															<!--begin::Input group-->
-															
-															<!--end::Input group-->
-															<!--begin::Input group-->
-															
-															<!--end::Input group-->
-														</div>
-														<!--end::Col-->
-													</div>
-													<!--end::Row-->
-													<!--begin::Table wrapper-->
-													<div class="table-responsive mb-10">
-														<!--begin::Table-->
-														<table class="table g-5 gs-0 mb-0 fw-bolder text-gray-700" data-kt-element="items">
-															<!--begin::Table head-->
-															<thead>
-																<tr class="border-bottom fs-7 fw-bolder text-gray-700 text-uppercase">
-																	<th class="min-w-300px w-475px">Item</th>
-																	<th class="min-w-100px w-100px">QTY</th>
-																	<th class="min-w-150px w-150px">Price</th>
-											
-																	<th class="min-w-75px w-75px text-end">Action</th>
-																</tr>
-															</thead>
-															<!--end::Table head-->
-															<!--begin::Table body-->
-															<tbody>
-																<tr class="border-bottom border-bottom-dashed" data-kt-element="item">
-																	<td class="pe-7">
-																		<input type = "text" class="form-control form-control-solid mb-2" id="product_names"  name="names[]">
-																		
-																		<input type="text" class="form-control form-control-solid" id= "description[]" name="description[]" placeholder="Description" />
-																	</td>
-																	<td class="ps-0">
-																		<input class="form-control form-control-solid" type="number" min="1" id= "quantity[]" name="quantity[]" placeholder="1" value="1" data-kt-element="quantity" />
-																	</td>
-																	<td>
-																		<div id="product_price">
-																		<input type="text" class="form-control form-control-solid text-end" id= "price" name="price[]" placeholder="0.00" value="0.00" data-kt-element="price" />
-																		</div>
-																		
-																	</td>
-																	<td class="pt-8 text-end text-nowrap">&#8358;
-
-																	<span data-kt-element="total">0.00</span></td>
-																	<td class="pt-5 text-end">
-																		<button type="button" class="btn btn-sm btn-icon btn-active-color-primary" data-kt-element="remove-item">
-																			<!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
-																			<span class="svg-icon svg-icon-3">
-																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																					<path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
-																					<path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black" />
-																					<path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black" />
-																				</svg>
-																			</span>
-																			<!--end::Svg Icon-->
-																		</button>
-																	</td>
-																</tr>
-															</tbody>
-															<!--end::Table body-->
-															<!--begin::Table foot-->
-															<tfoot>
-																<tr class="border-top border-top-dashed align-top fs-6 fw-bolder text-gray-700">
-																	<th class="text-primary">
-																		<button class="btn btn-link py-1" data-kt-element="add-item">Add item</button>
-																	</th>
-																	
-																	<th colspan="2" class="border-bottom border-bottom-dashed text-end">&#8358;
-																	<span data-kt-element="sub-total">0.00</span></th>
-																</tr>
-																<tr class="align-top fw-bolder text-gray-700">
-																	<th></th>
-																	<th colspan="2" class="fs-4 ps-0">Total</th>
-																	<th colspan="2" class="text-end fs-4 text-nowrap">&#8358;
-																	<span data-kt-element="grand-total">0.00</span></th>
-																</tr>
-															</tfoot>
-															<!--end::Table foot-->
-														</table>
-													</div>
-													<!--end::Table-->
-													<!--begin::Item template-->
-													<table class="table d-none" data-kt-element="item-template">
-														<tr class="border-bottom border-bottom-dashed" data-kt-element="item">
-															<td class="pe-7">
-																		<input type = "text" class="form-control form-control-solid mb-2" id="product_names"  name="names[]" />
-																		
-																<input type="text" class="form-control form-control-solid"id="description[]" name="description[]" placeholder="Description" />
-															</td>
-															<td class="ps-0">
-																<input class="form-control form-control-solid" type="number" min="1" id="quantity[]"  name="quantity[]" placeholder="1" data-kt-element="quantity" />
-															</td>
-															<td>
-																<div id = "product_price">
-																<input type="text" class="form-control form-control-solid text-end" id="price"  name="price[]" placeholder="0.00" data-kt-element="price" value="0.00" />
-																</div>
-																
-															</td>
-															<td class="pt-8 text-end">&#8358;
-															<span data-kt-element="total">0.00</span></td>
-															<td class="pt-5 text-end">
-																<button type="button"  class="btn btn-sm btn-icon btn-active-color-primary" data-kt-element="remove-item">
-																	<!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
-																	<span class="svg-icon svg-icon-3">
-																		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																			<path d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z" fill="black" />
-																			<path opacity="0.5" d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V5C19 5.55228 18.5523 6 18 6H6C5.44772 6 5 5.55228 5 5V5Z" fill="black" />
-																			<path opacity="0.5" d="M9 4C9 3.44772 9.44772 3 10 3H14C14.5523 3 15 3.44772 15 4V4H9V4Z" fill="black" />
-																		</svg>
-																	</span>
-																	<!--end::Svg Icon-->
-																</button>
+							<!--begin::Card-->
+							<div class="card">
+								<!--begin::Card header-->
+								<div class="card-header border-0 pt-6">
+									<!--begin::Card title-->
+									<div class="card-title">
+										<!--begin::Search-->
 										
-															</td>
-														</tr>
-													</table>
-													<table class="table d-none" data-kt-element="empty-template">
-														<tr data-kt-element="empty">
-															<th colspan="5" class="text-muted text-center py-10">No items</th>
-														</tr>
-													</table>
-													<!--end::Item template-->
-													<!--begin::Notes-->
-													<div class="mb-0">
-														<button type="submit" name = "btn" class="btn btn-primary w-100"  >
-															<!--begin::Svg Icon | path: icons/duotune/general/gen016.svg-->
-															<span class="svg-icon svg-icon-3">
+										<!--end::Search-->
+									</div>
+									<!--begin::Card title-->
+									<!--begin::Card toolbar-->
+									<div class="card-toolbar">
+										<!--begin::Toolbar-->
+										<div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+											<!--begin::Filter-->
+											
+											<!--begin::Menu 1-->
+											
+											<!--end::Menu 1-->
+											<!--end::Filter-->
+											<!--begin::Export-->
+											
+										<!--end::Toolbar-->
+										<!--begin::Group actions-->
+										<div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
+											<div class="fw-bolder me-5">
+											<span class="me-2" data-kt-user-table-select="selected_count"></span>Selected</div>
+											<button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
+										</div>
+										<!--end::Group actions-->
+										<!--begin::Modal - Adjust Balance-->
+										<div class="modal fade" id="kt_modal_export_users" tabindex="-1" aria-hidden="true">
+											<!--begin::Modal dialog-->
+											<div class="modal-dialog modal-dialog-centered mw-650px">
+												<!--begin::Modal content-->
+												<div class="modal-content">
+													<!--begin::Modal header-->
+													<div class="modal-header">
+														<!--begin::Modal title-->
+														<h2 class="fw-bolder">Export Users</h2>
+														<!--end::Modal title-->
+														<!--begin::Close-->
+														<div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+															<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+															<span class="svg-icon svg-icon-1">
 																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																	<path d="M15.43 8.56949L10.744 15.1395C10.6422 15.282 10.5804 15.4492 10.5651 15.6236C10.5498 15.7981 10.5815 15.9734 10.657 16.1315L13.194 21.4425C13.2737 21.6097 13.3991 21.751 13.5557 21.8499C13.7123 21.9488 13.8938 22.0014 14.079 22.0015H14.117C14.3087 21.9941 14.4941 21.9307 14.6502 21.8191C14.8062 21.7075 14.9261 21.5526 14.995 21.3735L21.933 3.33649C22.0011 3.15918 22.0164 2.96594 21.977 2.78013C21.9376 2.59432 21.8452 2.4239 21.711 2.28949L15.43 8.56949Z" fill="black" />
-																	<path opacity="0.3" d="M20.664 2.06648L2.62602 9.00148C2.44768 9.07085 2.29348 9.19082 2.1824 9.34663C2.07131 9.50244 2.00818 9.68731 2.00074 9.87853C1.99331 10.0697 2.04189 10.259 2.14054 10.4229C2.23919 10.5869 2.38359 10.7185 2.55601 10.8015L7.86601 13.3365C8.02383 13.4126 8.19925 13.4448 8.37382 13.4297C8.54839 13.4145 8.71565 13.3526 8.85801 13.2505L15.43 8.56548L21.711 2.28448C21.5762 2.15096 21.4055 2.05932 21.2198 2.02064C21.034 1.98196 20.8409 1.99788 20.664 2.06648Z" fill="black" />
+																	<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+																	<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
 																</svg>
 															</span>
-															<!--end::Svg Icon-->Generate Invoice</button>
-
-															<?php 
-
-														if(isset($_POST['btn']))
-														{
-
-															$counter = count($_POST['names']);
-															$myArray = array();
-															$_SESSION['product_name'] = array();
-															$_SESSION['description'] = array();
-															$_SESSION['quantity'] = array();
-															$_SESSION['price'] = array();
-															$_SESSION['invoice_number'] = array();
-														
-															
-															$today = date("Y-m-d");
-
-																for($x = 0; $x < $counter; $x++){
-																	 
-																	$product_name = $_POST['names'][$x];
-																	$description  = $_POST['description'][$x];
-																	$quantity  = $_POST['quantity'][$x];
-																	$price  = $_POST['price'][$x];
-																	$newStr = str_replace(',', '', $price);
-
-																
-																	$price = (float)$newStr;
-																	
-															
-																	try {
-																		
-																		if($product_name!=='' && $description!=='' && $quantity!=='' && $price!==''){
-																			
-																			$sql="INSERT INTO invoicepayment(payment_date, product_name,description,product_qty,product_price,invoice_number,annex_id)VALUES('$today','$product_name','$description','$quantity','$price','$invoice_number','$annex_id')";
-																			$stmt=$conn->prepare($sql);
-																		  $result =	$stmt->execute();
-																				array_push($_SESSION['product_name'], $product_name);
-																				array_push($_SESSION['description'], $description);
-																				array_push($_SESSION['quantity'], $quantity);
-																				array_push($_SESSION['price'], $price);
-																				array_push($_SESSION['invoice_number'], $invoice_number);
-																		
-																			$num_rows = $stmt->rowCount();
-																			if ($result) {
-																				
-																			echo	'<script>
-																				window.location.href = "Invoice/Invoice.php";
-																				</script>';
-																			}  
-																		  }else {
-																			  $msg = "Invoice  was not created succesfully" ;
-																			  $msgType = "warning";
-																			  ?>
-																				<div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
-																					  <?php echo $msg; ?>
-																					  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-																			  </div>
-																		   <?php   
-																			}
-																	} catch (Exception $ex) {
-																		echo $ex->getMessage();
-																	}
-																	
-																} 
-														
-																
-
-		
-		
-																}
-
-															
-
-															
-
-														
-
-?>
+															<!--end::Svg Icon-->
+														</div>
+														<!--end::Close-->
 													</div>
-													<!--end::Notes-->
+													<!--end::Modal header-->
+													<!--begin::Modal body-->
+													<div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+														<!--begin::Form-->
+														<form id="kt_modal_export_users_form" class="form" action="#">
+															<!--begin::Input group-->
+															<div class="fv-row mb-10">
+																<!--begin::Label-->
+																<label class="fs-6 fw-bold form-label mb-2">Select Roles:</label>
+																<!--end::Label-->
+																<!--begin::Input-->
+																<select name="role" data-control="select2" data-placeholder="Select a role" data-hide-search="true" class="form-select form-select-solid fw-bolder">
+																	<option></option>
+																	<option value="Administrator">Administrator</option>
+																	<option value="Analyst">Analyst</option>
+																	<option value="Developer">Developer</option>
+																	<option value="Support">Support</option>
+																	<option value="Trial">Trial</option>
+																</select>
+																<!--end::Input-->
+															</div>
+															<!--end::Input group-->
+															<!--begin::Input group-->
+															<div class="fv-row mb-10">
+																<!--begin::Label-->
+																<label class="required fs-6 fw-bold form-label mb-2">Select Export Format:</label>
+																<!--end::Label-->
+																<!--begin::Input-->
+																<select name="format" data-control="select2" data-placeholder="Select a format" data-hide-search="true" class="form-select form-select-solid fw-bolder">
+																	<option></option>
+																	<option value="excel">Excel</option>
+																	<option value="pdf">PDF</option>
+																	<option value="cvs">CVS</option>
+																	<option value="zip">ZIP</option>
+																</select>
+																<!--end::Input-->
+															</div>
+															<!--end::Input group-->
+															<!--begin::Actions-->
+															<div class="text-center">
+																<button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
+																<button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+																	<span class="indicator-label">Submit</span>
+																	<span class="indicator-progress">Please wait...
+																	<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+																</button>
+															</div>
+															<!--end::Actions-->
+														</form>
+														<!--end::Form-->
+													</div>
+													<!--end::Modal body-->
 												</div>
-												<!--end::Wrapper-->
-											</form>
-											<!--end::Form-->
+												<!--end::Modal content-->
+											</div>
+											<!--end::Modal dialog-->
 										</div>
-										<!--end::Card body-->
+										<!--end::Modal - New Card-->
+										<!--begin::Modal - Add task-->
+										<div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
+											<!--begin::Modal dialog-->
+											<div class="modal-dialog modal-dialog-centered mw-650px">
+												<!--begin::Modal content-->
+												<div class="modal-content">
+													<!--begin::Modal header-->
+													<div class="modal-header" id="kt_modal_add_user_header">
+														<!--begin::Modal title-->
+														<h2 class="fw-bolder">Add User</h2>
+														<!--end::Modal title-->
+														<!--begin::Close-->
+														<div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+															<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+															<span class="svg-icon svg-icon-1">
+																<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																	<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+																	<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+																</svg>
+															</span>
+															<!--end::Svg Icon-->
+														</div>
+														<!--end::Close-->
+													</div>
+													<!--end::Modal header-->
+													<!--begin::Modal body-->
+													<div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+														<!--begin::Form-->
+														<form id="kt_modal_add_user_form" class="form" action="#">
+															<!--begin::Scroll-->
+															<div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+																<!--begin::Input group-->
+																<div class="fv-row mb-7">
+																	<!--begin::Label-->
+																	<label class="d-block fw-bold fs-6 mb-5">Avatar</label>
+																	<!--end::Label-->
+																	<!--begin::Image input-->
+																	<div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(assets/media/avatars/blank.png)">
+																		<!--begin::Preview existing avatar-->
+																		<div class="image-input-wrapper w-125px h-125px" style="background-image: url(assets/media/avatars/150-1.jpg);"></div>
+																		<!--end::Preview existing avatar-->
+																		<!--begin::Label-->
+																		<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+																			<i class="bi bi-pencil-fill fs-7"></i>
+																			<!--begin::Inputs-->
+																			<input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
+																			<input type="hidden" name="avatar_remove" />
+																			<!--end::Inputs-->
+																		</label>
+																		<!--end::Label-->
+																		<!--begin::Cancel-->
+																		<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+																			<i class="bi bi-x fs-2"></i>
+																		</span>
+																		<!--end::Cancel-->
+																		<!--begin::Remove-->
+																		<span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+																			<i class="bi bi-x fs-2"></i>
+																		</span>
+																		<!--end::Remove-->
+																	</div>
+																	<!--end::Image input-->
+																	<!--begin::Hint-->
+																	<div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+																	<!--end::Hint-->
+																</div>
+																<!--end::Input group-->
+																<!--begin::Input group-->
+																<div class="fv-row mb-7">
+																	<!--begin::Label-->
+																	<label class="required fw-bold fs-6 mb-2">Full Name</label>
+																	<!--end::Label-->
+																	<!--begin::Input-->
+																	<input type="text" name="user_name" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Full name" value="Emma Smith" />
+																	<!--end::Input-->
+																</div>
+																<!--end::Input group-->
+																<!--begin::Input group-->
+																<div class="fv-row mb-7">
+																	<!--begin::Label-->
+																	<label class="required fw-bold fs-6 mb-2">Email</label>
+																	<!--end::Label-->
+																	<!--begin::Input-->
+																	<input type="email" name="user_email" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="example@domain.com" value="e.smith@kpmg.com.au" />
+																	<!--end::Input-->
+																</div>
+																<!--end::Input group-->
+																<!--begin::Input group-->
+																<div class="mb-7">
+																	<!--begin::Label-->
+																	<label class="required fw-bold fs-6 mb-5">Role</label>
+																	<!--end::Label-->
+																	<!--begin::Roles-->
+																	<!--begin::Input row-->
+																	<div class="d-flex fv-row">
+																		<!--begin::Radio-->
+																		<div class="form-check form-check-custom form-check-solid">
+																			<!--begin::Input-->
+																			<input class="form-check-input me-3" name="user_role" type="radio" value="0" id="kt_modal_update_role_option_0" checked='checked' />
+																			<!--end::Input-->
+																			<!--begin::Label-->
+																			<label class="form-check-label" for="kt_modal_update_role_option_0">
+																				<div class="fw-bolder text-gray-800">Administrator</div>
+																				<div class="text-gray-600">Best for business owners and company administrators</div>
+																			</label>
+																			<!--end::Label-->
+																		</div>
+																		<!--end::Radio-->
+																	</div>
+																	<!--end::Input row-->
+																	<div class='separator separator-dashed my-5'></div>
+																	<!--begin::Input row-->
+																	<div class="d-flex fv-row">
+																		<!--begin::Radio-->
+																		<div class="form-check form-check-custom form-check-solid">
+																			<!--begin::Input-->
+																			<input class="form-check-input me-3" name="user_role" type="radio" value="1" id="kt_modal_update_role_option_1" />
+																			<!--end::Input-->
+																			<!--begin::Label-->
+																			<label class="form-check-label" for="kt_modal_update_role_option_1">
+																				<div class="fw-bolder text-gray-800">Developer</div>
+																				<div class="text-gray-600">Best for developers or people primarily using the API</div>
+																			</label>
+																			<!--end::Label-->
+																		</div>
+																		<!--end::Radio-->
+																	</div>
+																	<!--end::Input row-->
+																	<div class='separator separator-dashed my-5'></div>
+																	<!--begin::Input row-->
+																	<div class="d-flex fv-row">
+																		<!--begin::Radio-->
+																		<div class="form-check form-check-custom form-check-solid">
+																			<!--begin::Input-->
+																			<input class="form-check-input me-3" name="user_role" type="radio" value="2" id="kt_modal_update_role_option_2" />
+																			<!--end::Input-->
+																			<!--begin::Label-->
+																			<label class="form-check-label" for="kt_modal_update_role_option_2">
+																				<div class="fw-bolder text-gray-800">Analyst</div>
+																				<div class="text-gray-600">Best for people who need full access to analytics data, but don't need to update business settings</div>
+																			</label>
+																			<!--end::Label-->
+																		</div>
+																		<!--end::Radio-->
+																	</div>
+																	<!--end::Input row-->
+																	<div class='separator separator-dashed my-5'></div>
+																	<!--begin::Input row-->
+																	<div class="d-flex fv-row">
+																		<!--begin::Radio-->
+																		<div class="form-check form-check-custom form-check-solid">
+																			<!--begin::Input-->
+																			<input class="form-check-input me-3" name="user_role" type="radio" value="3" id="kt_modal_update_role_option_3" />
+																			<!--end::Input-->
+																			<!--begin::Label-->
+																			<label class="form-check-label" for="kt_modal_update_role_option_3">
+																				<div class="fw-bolder text-gray-800">Support</div>
+																				<div class="text-gray-600">Best for employees who regularly refund payments and respond to disputes</div>
+																			</label>
+																			<!--end::Label-->
+																		</div>
+																		<!--end::Radio-->
+																	</div>
+																	<!--end::Input row-->
+																	<div class='separator separator-dashed my-5'></div>
+																	<!--begin::Input row-->
+																	<div class="d-flex fv-row">
+																		<!--begin::Radio-->
+																		<div class="form-check form-check-custom form-check-solid">
+																			<!--begin::Input-->
+																			<input class="form-check-input me-3" name="user_role" type="radio" value="4" id="kt_modal_update_role_option_4" />
+																			<!--end::Input-->
+																			<!--begin::Label-->
+																			<label class="form-check-label" for="kt_modal_update_role_option_4">
+																				<div class="fw-bolder text-gray-800">Trial</div>
+																				<div class="text-gray-600">Best for people who need to preview content data, but don't need to make any updates</div>
+																			</label>
+																			<!--end::Label-->
+																		</div>
+																		<!--end::Radio-->
+																	</div>
+																	<!--end::Input row-->
+																	<!--end::Roles-->
+																</div>
+																<!--end::Input group-->
+															</div>
+															<!--end::Scroll-->
+															<!--begin::Actions-->
+															<div class="text-center pt-15">
+																<button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
+																<button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+																	<span class="indicator-label">Submit</span>
+																	<span class="indicator-progress">Please wait...
+																	<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+																</button>
+															</div>
+															<!--end::Actions-->
+														</form>
+														<!--end::Form-->
+													</div>
+													<!--end::Modal body-->
+												</div>
+												<!--end::Modal content-->
+											</div>
+											<!--end::Modal dialog-->
+										</div>
+										<!--end::Modal - Add task-->
 									</div>
-									<!--end::Card-->
+									<!--end::Card toolbar-->
 								</div>
-								<!--end::Content-->
-								<!--begin::Sidebar-->
-								
-								<!--end::Sidebar-->
+								<!--end::Card header-->
+								<!--begin::Card body-->
+								<div class="card-body py-4">
+									<!--begin::Table-->
+									<form class="form w-100" action="<?php echo isset($_SERVER["PHP_SELF"]) ? htmlspecialchars($_SERVER["PHP_SELF"]) : ''; ?>" method="POST">
+
+											
+									<?php
+                                    if (isset($_POST["btn"])) {
+                                        $classes = Sanitize::sanitizeString($_POST["classes"]);
+										$subject = Sanitize::sanitizeString($_POST["subject"]);
+										$question = Sanitize::sanitizeString($_POST['question']);
+										$option_a = Sanitize::sanitizeString($_POST['option_a']);
+										$option_b = Sanitize::sanitizeString($_POST['option_b']);
+										$option_c = Sanitize::sanitizeString($_POST['option_c']);
+										$option_d = Sanitize::sanitizeString($_POST['option_d']);
+										$option_e = Sanitize::sanitizeString($_POST['option_e']);
+                                        $correct_option = Sanitize::sanitizeString($_POST['correct_option']);                               
+										//$Annexes->insertAnnex($annexName);
+
+										$insertExam->insertExam($question, $option_a,$option_b, $option_c, $option_d, $option_e, $correct_option, $classes, $subject);
+                                    }
+                        ?>	
+                                        
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6" for="class"> Class  </label>
+                                            <select  class="form-control form-control-lg form-control-solid" name="classes" id = "classes" autocomplete="off">
+                                                <option value = ""> Select Class </option>
+												<?php $classes->dropdownClass(); ?>
+											</select>
+                                        </div>
+
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6" for="subject"> Subject  </label>
+                                            <select  class="form-control form-control-lg form-control-solid" name="subject" id = "subject" autocomplete="off">
+                                                <option value = ""> Select Subject </option>
+											 <?php	$course->dropDownCourses(); ?>
+											</select>
+                                        </div>
+
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6"  for = "question">Question </label>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['question']) ? htmlspecialchars($_POST['question']) : ''; ?>" name="question" id="question" autocomplete="off">
+                                        </div>
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_a">Option a </label>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_a']) ? htmlspecialchars($_POST['option_a']) : ''; ?>" name="option_a" id="option_a" autocomplete="off">
+                                        </div>
+										<div class="fv-row mb-5">
+                                        <label class="form-label fw-bolder text-dark fs-6"  for = "option_b"> Option b </label>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_b']) ? htmlspecialchars($_POST['option_b']) : ''; ?>" name="option_b" id="option_b" autocomplete="off">
+                                        </div>
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_c">Option c </label>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_c']) ? htmlspecialchars($_POST['option_c']) : ''; ?>" name="option_c" id="option_c" autocomplete="off">
+                                        </div>
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_d">Option d </label>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_d']) ? htmlspecialchars($_POST['option_d']) : ''; ?>" name="option_d" id="option_d" autocomplete="off">
+                                        </div>
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_e">Option e </label>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_e']) ? htmlspecialchars($_POST['option_e']) : ''; ?>" name="option_e" id="option_e" autocomplete="off">
+                                        </div>
+										<div class="fv-row mb-5">
+										
+                                            <label class="form-label fw-bolder text-dark fs-6"  for = "correct_option">correct_option </label>
+											<select  class="form-control form-control-lg form-control-solid" name="correct_option" id = "correct_option" autocomplete="off">
+                                                <option value = ""> Select Subject </option>
+											 	<option value = "option_a"> option_a</option>
+												 <option value = "option_b">option_b </option>
+												 <option value = "option_c"> option_c</option>
+												 <option value = "option_d">option_d </option>
+												 <option value = "option_e">option_e </option>
+											</select>
+                                           
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        
+                                        <!--end::Input group-->
+                                        <!--begin::Actions-->
+            
+										<div class="row fv-row mb-7" style="float:left;">
+                                        <div class="col-xl-6">
+										<input type="submit" name="btn" class="btn btn-lg btn-primary" value="submit"  />
+                                           
+                                        </div><br><br>
+            
+            
+            
+                                        
+                                    </div>
+                                        <!--end::Actions-->
+                                    </form>
+									<!--end::Table-->
+								</div>
+								<!--end::Card body-->
 							</div>
-							<!--end::Layout-->
+							<!--end::Card-->
 						</div>
 						<!--end::Container-->
 					</div>
@@ -3046,23 +731,10 @@ License: For each use you must have a valid license purchased only from above li
 						<!--begin::Container-->
 						<div class="container d-flex flex-column flex-md-row flex-stack">
 							<!--begin::Copyright-->
-							<div class="text-dark order-2 order-md-1">
-								<span class="text-gray-400 fw-bold me-1">Created by</span>
-								<a href="https://keenthemes.com" target="_blank" class="text-muted text-hover-primary fw-bold me-2 fs-6">Keenthemes</a>
-							</div>
+							
 							<!--end::Copyright-->
 							<!--begin::Menu-->
-							<ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
-								<li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://keenthemes.com/support" target="_blank" class="menu-link px-2">Support</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-								</li>
-							</ul>
+							
 							<!--end::Menu-->
 						</div>
 						<!--end::Container-->
@@ -4553,7 +2225,7 @@ License: For each use you must have a valid license purchased only from above li
 					<div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
 						<!--begin::Content-->
 						<div class="text-center mb-13">
-							<h1 class="mb-3">Search Users</h1>
+							<h1 class="mb-3">Search Usersss</h1>
 							<div class="text-muted fw-bold fs-5">Invite Collaborators To Your Project</div>
 						</div>
 						<!--end::Content-->
@@ -5275,13 +2947,13 @@ License: For each use you must have a valid license purchased only from above li
 												<!--end::Checkbox-->
 												<!--begin::Avatar-->
 												<div class="symbol symbol-35px symbol-circle">
-													<img alt="Pic" src="assets/media/avatars/150-4.jpg" />
+													<span class="symbol-label bg-light-warning text-warning fw-bold">C</span>
 												</div>
 												<!--end::Avatar-->
 												<!--begin::Details-->
 												<div class="ms-5">
-													<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">Sean Bean</a>
-													<div class="fw-bold text-muted">sean@dellito.com</div>
+													<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">Mikaela Collins</a>
+													<div class="fw-bold text-muted">mikaela@pexcom.com</div>
 												</div>
 												<!--end::Details-->
 											</div>
@@ -5903,70 +3575,14 @@ License: For each use you must have a valid license purchased only from above li
 		<script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
 		<!--end::Page Vendors Javascript-->
 		<!--begin::Page Custom Javascript(used by this page)-->
-		<script src="assets/js/custom/apps/invoices/create.js"></script>
+		<script src="assets/js/custom/apps/user-management/users/list/table.js"></script>
+		<script src="assets/js/custom/apps/user-management/users/list/export-users.js"></script>
+		<script src="assets/js/custom/apps/user-management/users/list/add.js"></script>
 		<script src="assets/js/custom/widgets.js"></script>
 		<script src="assets/js/custom/apps/chat/chat.js"></script>
 		<script src="assets/js/custom/modals/users-search.js"></script>
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
-		 <script>
-// 			function tester(){
-// 				var testTarget = document.getElementsByClassName('names[]')[0].textContent;
-// 				//var value = testTarget[0].textContent;
-// 				alert(testTarget);
-// 				console.log(target);
-
-// 				const products = document.getElementsByClassName('names[]');
-// let result = document.getElementsByClassName('name[]');
-// for (let i = 0; i < products.length; i++) {
-//   result += `\n  ${products[i].textContent}`;
- 
-// }
-
-// alert(result);
-// console.log(result);
-			//}
-</script> 
-
-<script>
-// function product_select(val){
-//     //     var selected = $("#product_names :selected").map((_, e) => e.value).get();
-//     //    alert(selected)
-// 	// 	$.ajax({
-// 	// type: "POST",
-// 	// url: "./ajax/get_price.php",
-// 	// data:'product_id='+val,
-// 	// success: function(data){
-// 	// 	$("#product_price").html(data);
-	
-// 	// }
-// 	// });
-   
-// }
-
-
-
-function getTotal(){
-	let product = $.trim($("#quantity").val());
-	let	 price = $.trim($("#price").val());
-
-	let total  = product * price;
-
-	myTotal = document.getElementById("total");
-	myTotal.value = total;
-	console.log(total, " i am here ");
-	
-}
-
-function product_select(val){
-	let selected = []; 
-	$("#product_names :selected").each(function(){
-		selected.push(this.value)
-	});
-	alert(selected)
-}
-</script>
-
 	</body>
 	<!--end::Body-->
 </html>

@@ -1,6 +1,6 @@
 <?php
-require_once("./MyPhpConnections/connection.php");
-
+require_once("../PhpConnections/connection.php");
+//require_once('./');
 Class Courses{
 
     //private $all_user = [];
@@ -14,20 +14,22 @@ Class Courses{
 
     function dropDownCourses(){
       $conn = connect();
-      $Course_query  = $conn->prepare("SELECT * FROM `Subjects`");
+      $Course_query  = $conn->prepare("SELECT * FROM `subjects`");
       $Course_query->execute();
       while($row = $Course_query->fetch(PDO::FETCH_ASSOC)){
         $Courses = $row['Name'] ;
-        $CoursesId = $row['ID'];
+        $CoursesId = $row['id'];
+
         
-        echo '<option value=" '.$CoursesId.'" >'.$Courses.'</option>';
+        
+        echo '<option value=" '.$CoursesId.'" >'.htmlspecialchars($Courses).'</option>';
 
 }
     }
 
     function tableCourses(){
       $conn = connect();
-      $Course_query  = $conn->prepare("SELECT * FROM `Subjects`");
+      $Course_query  = $conn->prepare("SELECT * FROM `subjects`");
       $Course_query->execute();
       while($row = $Course_query->fetch(PDO::FETCH_ASSOC)){
         $Courses = $row['Name'] ;
@@ -41,6 +43,8 @@ Class Courses{
 
 
 }
+
+
 
 
 ?>
