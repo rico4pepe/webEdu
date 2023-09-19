@@ -9,27 +9,7 @@ $password = $GenerateValue->generate_random_password(10);
 
 
 $learner = new learners();
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-if (isset($_POST["btn"])) {
-    $first_name = trim($_POST["first_name"]);
-    $Second_name = trim($_POST["Second_name"]);
-    $SurName = trim($_POST["Sur_Name"]);
-    $Sex = trim($_POST["sex"]);
-    $Date_of_birth = trim($_POST["D_O_B"]);
-    $Guidance_Email = trim($_POST["email"]);
-    $Guidance_phone_No = trim($_POST["phone_No"]);
-    $address = trim($_POST["address"]);
-    $State_Of_origin = trim($_POST["state_of_origin"]);
-    $Blood_Group = trim($_POST["blood_group"]);
-    $Geno_Type = trim($_POST["Geno_Type"]);
-    $Guidance_Occupation = trim($_POST["Guidance_Occup"]);
-    $Second_name = trim($_POST["Second_name"]);
-    $unique_id = trim($_POST["student_unique_number"]);
-    $unique_password = trim($_POST["password"]);
 
-    $learner->insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $myImag, $unique_id, $unique_password);
-}
-}
 ?>
 
 <!DOCTYPE html>
@@ -89,6 +69,31 @@ License: For each use you must have a valid license purchased only from above li
                 <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
                     <!--begin::Form-->
                     <form class="form w-100" method="post" onsubmit="return validateForm();">
+                        <?php
+                                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                    if (isset($_POST["btn"])) {
+                                        $first_name = trim($_POST["first_name"]);
+                                        $Second_name = trim($_POST["Second_name"]);
+                                        $SurName = trim($_POST["Sur_Name"]);
+                                        $Sex = trim($_POST["sex"]);
+                                        $Date_of_birth = trim($_POST["D_O_B"]);
+                                        $Guidance_Email = trim($_POST["email"]);
+                                        $Guidance_phone_No = trim($_POST["phone_No"]);
+                                        $address = trim($_POST["address"]);
+                                        $State_Of_origin = trim($_POST["state_of_origin"]);
+                                        $Blood_Group = trim($_POST["blood_group"]);
+                                        $Geno_Type = trim($_POST["Geno_Type"]);
+                                        $Guidance_Occupation = trim($_POST["Guidance_Occup"]);
+                                        $Second_name = trim($_POST["Second_name"]);
+                                        $unique_id = trim($_POST["student_unique_number"]);
+                                        $unique_password = trim($_POST["pass"]);
+                                        $unique_password = password_hash($unique_password, PASSWORD_BCRYPT);
+                                        $myImag  = trim($_POST["my_Image "]);
+                                    
+                                        $learner->insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation,$unique_id, $unique_password, $myImag);
+                                    }
+                                    }
+                        ?>
                         <!--begin::Heading-->
                         <div class="mb-10 text-center">
                             <!--begin::Title-->

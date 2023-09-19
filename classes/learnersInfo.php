@@ -13,8 +13,9 @@ class learners
 
         $sql = "INSERT INTO `learners_bd` (`First_Name`, `Second_name`, `SurName`, `Sex`, `Date_of_birth`, `Guidance_Email`,`Guidance_phone_No`,`address`, `State_Of_origin`,`Blood_Group`,`Geno_Type`,`Guidance_Occupation`,`student_unique_id`, `password`, `imageUrl`) 
         VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :img_url, :ui, :up)";
-
-        $stmt = $conn->prepare($sql);
+            try {
+                //code...
+                $stmt = $conn->prepare($sql);
         $stmt->bindValue(":fname", $first_name);
         $stmt->bindValue(":Scname", $Second_name);
         $stmt->bindValue(":Sname", $SurName);
@@ -31,11 +32,34 @@ class learners
         $stmt->bindValue(":ui", $unique_id);
         $stmt->bindValue(":up", $unique_password);
         $stmt->bindValue(":img_url", $myImag);
-       
-        //Password Hashing
-        // $stmt->bindValue(":pass", $pass);
-        //End Password Hashing
-
         $stmt->execute();
+        $num_rows2 = $stmt->rowCount();
+        if($num_rows2 > 0){
+            
+            $msg = "Student has been  registered.";
+          $msgType = "success";
+
+          ?>
+        <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+       <?php   
+        }else {
+            $msg = "Student was not succesfully registered";
+            $msgType = "warning";
+            ?>
+             <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+         <?php   
+          }
+            } catch (Exception $ex) {
+                //throw $th;
+                echo $ex->getMessage();
+            }
+        
     }
 }
