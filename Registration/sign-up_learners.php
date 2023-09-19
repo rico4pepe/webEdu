@@ -1,10 +1,15 @@
 <?php
 require_once('../PhpConnections/connection.php');
 require_once("../classes/learnersInfo.php");
+require_once('../utilites/Randomizer.php');
+
+$GenerateValue = new Randomizer();
+$unique_id = $GenerateValue->generate_random_password(7);
+$password = $GenerateValue->generate_random_password(10);
 
 
 $learner = new learners();
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_POST["btn"])) {
     $first_name = trim($_POST["first_name"]);
     $Second_name = trim($_POST["Second_name"]);
@@ -18,9 +23,12 @@ if (isset($_POST["btn"])) {
     $Blood_Group = trim($_POST["blood_group"]);
     $Geno_Type = trim($_POST["Geno_Type"]);
     $Guidance_Occupation = trim($_POST["Guidance_Occup"]);
-    $myImag = trim($_POST["my_Image"]);
+    $Second_name = trim($_POST["Second_name"]);
+    $unique_id = trim($_POST["student_unique_number"]);
+    $unique_password = trim($_POST["password"]);
 
-    $learner->insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $myImag);
+    $learner->insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $myImag, $unique_id, $unique_password);
+}
 }
 ?>
 
@@ -192,6 +200,18 @@ License: For each use you must have a valid license purchased only from above li
                                 <label class="form-label fw-bolder text-dark fs-6">Guidance Occupation</label>
                                 <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="Guidance_Occup" name="Guidance_Occup" autocomplete="off" /><br><br>
                             </div>
+
+                            <div class="col-xl-6">
+                                <label class="form-label fw-bolder text-dark fs-6">Student Unique Number</label>
+                                <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="student_unique_number" value="<?php echo $unique_id; ?>" name="student_unique_number" autocomplete="off" readonly /><br><br>
+                            </div>  <div class="col-xl-6">
+                                <label class="form-label fw-bolder text-dark fs-6">Password</label>
+                                <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="pass" name="pass" value="<?php echo $password; ?>" autocomplete="off"  readonly/><br><br>
+                            </div>
+
+                            
+
+
                             <!--end::Col-->
                         </div>
                         <!--end::Input group-->

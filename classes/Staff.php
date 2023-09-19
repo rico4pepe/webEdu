@@ -1,5 +1,11 @@
 <?php
 require_once("../PhpConnections/connection.php");
+require_once("../utilites/ValidateMail.php");
+require_once("../utilites/Sanitize.php");
+require_once("AuditLog.php");
+
+//Think of solving url issues
+
 
 class Staff
 {
@@ -106,6 +112,71 @@ class Staff
 
             echo '<option value=" '. $role_id .'" >'.$role_name.'</option>';
    }
+    }
+
+
+    function login($username, $password){
+        session_start();
+            $check_mail = new ValidateMail();
+
+            $login_audit = new AuditLog();
+            $conn = connect();
+            
+            
+            if($check_mail->checkmail($username)){
+
+            $created_At = date("Y-m-d H:i:s");
+            $modified_At = date("Y-m-d H:i:s");
+            $Is_Deleted = 0;
+                $username = Sanitize::sanitizeEmail($username);
+				$query = "SELECT * FROM staff_db WHERE Email = :em AND staff_uniqueKey = :uk ";
+				$res = $conn->prepare($query);
+				$res->bindValue(":em", $username, PDO::PARAM_STR);
+				$res->bindValue(":uk", $password, PDO::PARAM_STR);
+				$res->execute();
+                $num_rows = $res->rowCount();
+                $action = "Logged in";
+                if($num_rows > 0){
+                    $row = $res->fetch(PDO::FETCH_ASSOC);
+
+                    $login_audit->audit_login($action, $password);
+                
+                    $_SESSION['id']=$row['staff_ID'];
+                    header("location:../Dashboard.php");
+
+
+                }
+              
+            }else{
+
+                $query = "SELECT * FROM  learners_bd WHERE student_unique_id = :uk AND password  = :pa ";
+				$res = $conn->prepare($query);
+				$res->bindValue(":uk", $username, PDO::PARAM_STR);
+				$res->bindValue(":pa", $password, PDO::PARAM_STR);
+				$res->execute();
+                $num_rows = $res->rowCount();
+                if($num_rows > 0){
+                $row = $res->fetch(PDO::FETCH_ASSOC);
+                $_SESSION['id']=$row['ID'];
+                }
+            }
+    }
+
+    function get_staff_Name($user_id){
+        $conn = connect();
+        $query = "SELECT * FROM staff_db WHERE staff_ID = :sd";
+        $res = $conn->prepare($query);
+        $res->bindValue(":sd", $user_id, PDO::PARAM_STR);
+        $res->execute();
+      $row = $res->fetch(PDO::FETCH_ASSOC);
+      
+      if ($row) {
+        return $row['First_Name'];
+    } else {
+        return null; // Return null or handle the case where no result is found
+    }
+           
+    
     }
     
 }

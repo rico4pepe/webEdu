@@ -3,7 +3,7 @@ require_once("../PhpConnections/connection.php");
 
 class learners
 {
-    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $myImag)
+    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $myImag, $unique_id, $unique_password)
     {
         $conn = connect();
 
@@ -11,8 +11,8 @@ class learners
         $modified_At = date("Y-m-d H:i:s");
         $Is_Deleted = 0;
 
-        $sql = "INSERT INTO `learners_bd` (`First_Name`, `Second_name`, `SurName`, `Sex`, `Date_of_birth`, `Guidance_Email`,`Guidance_phone_No`,`address`, `State_Of_origin`,`Blood_Group`,`Geno_Type`,`Guidance_Occupation`, `imageUrl`) 
-        VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :img_url)";
+        $sql = "INSERT INTO `learners_bd` (`First_Name`, `Second_name`, `SurName`, `Sex`, `Date_of_birth`, `Guidance_Email`,`Guidance_phone_No`,`address`, `State_Of_origin`,`Blood_Group`,`Geno_Type`,`Guidance_Occupation`,`student_unique_id`, `password`, `imageUrl`) 
+        VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :img_url, :ui, :up)";
 
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(":fname", $first_name);
@@ -28,8 +28,10 @@ class learners
         $stmt->bindValue(":Bld_Grp", $Blood_Group);
         $stmt->bindValue(":Geno_Type", $Geno_Type);
         $stmt->bindValue(":GD_Occptn", $Guidance_Occupation);
+        $stmt->bindValue(":ui", $unique_id);
+        $stmt->bindValue(":up", $unique_password);
         $stmt->bindValue(":img_url", $myImag);
-
+       
         //Password Hashing
         // $stmt->bindValue(":pass", $pass);
         //End Password Hashing

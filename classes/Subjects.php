@@ -67,4 +67,19 @@ class Subjects
             echo '<option value=" '. $name_id .'" >'.$subject_name.'</option>';
    }
     }
+
+    public function getSubject($subject_id){
+        $conn = connect(); 
+        $user_query  = $conn->prepare("SELECT Name FROM subjects where id = :id");
+        $user_query->bindValue(":id", $subject_id);
+        $user_query->execute(); 
+        $results = $user_query->fetch(PDO::FETCH_ASSOC);
+        if ($results) {
+            return $results['Name'];
+        } else {
+            return null; // Return null or handle the case where no result is found
+        }
+    }
+
+    
 }

@@ -1,6 +1,24 @@
 <?php
+require_once('PhpConnections/session.php');
+require_once("PhpConnections/connection.php");
+
     ini_set( 'display_errors', 1 );
     error_reporting( E_ALL );
+	
+	$conn = connect();
+	$query = "SELECT * FROM staff_db WHERE staff_ID = :sd";
+	$res = $conn->prepare($query);
+	$res->bindValue(":sd", $session_id, PDO::PARAM_STR);
+	$res->execute();
+  $row = $res->fetch(PDO::FETCH_ASSOC);
+  
+  if ($row) {
+	$username =  $row['First_Name'];
+} else {
+	$username = null; // Return null or handle the case where no result is found
+}
+	
+
 
 ?>
 <!DOCTYPE html>
@@ -276,7 +294,7 @@ License: For each use you must have a valid license purchased only from above li
 							<!--begin::Page title-->
 							<div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-2 pb-5 pb-lg-0" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', lg: '#kt_header_container'}">
 								<!--begin::Heading-->
-								<h1 class="d-flex flex-column text-dark fw-bolder my-0 fs-1">Hello, Paul
+								<h1 class="d-flex flex-column text-dark fw-bolder my-0 fs-1">Hello, <?php echo $username; ?>
 								<small class="text-muted fs-6 fw-bold ms-1 pt-1">General Overview for 2022/2023 Session</small></h1>
 								<!--end::Heading-->
 							</div>

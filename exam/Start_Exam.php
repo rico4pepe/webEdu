@@ -1,29 +1,40 @@
 <?php 
-											
-ini_set( 'display_errors', 1 );
-error_reporting( E_ALL );
-require_once('../classes/Courses.php');
-require_once('../classes/SchoolClass.php');
+
+require_once('../classes/Subjects.php');
 require_once('../classes/Exam.php');
-require_once('../classes/Sanitize.php');
-$course = new Courses();
 
-$classes = new SchoolClass();
-// print_r($classes->dropdownClass());
-// die();
+//$SchoolClasses = new SchoolClass();
+$subject = new Subjects();
+$validate_user = new Exam();
 
-$insertExam = new Exam();
 
-$subject_id = 13; // Replace with the actual student ID
-$class_id = 8;   // Replace with the actual class ID
+$exam_status = "";
+$exam_id = "";
+$remaining_min = "";
 
-$params = [
-    'subject_id' => $subject_id,
-    'class_id' => $class_id,
-];
+$student_id = 2;
 
-$query_string = http_build_query($params);
-$url = "exam/Start_Exam.php?$query_string";
+// Check if the student_id and class_id parameters exist in the URL
+if (isset($_GET['subject_id']) && isset($_GET['class_id'])) {
+    // Retrieve the values of student_id and class_id
+    $subject_id = $_GET['subject_id'];
+    $class_id = $_GET['class_id'];
+    $subject_name = $subject->getSubject($subject_id);
+
+	
+	
+
+    // Now you can use $student_id and $class_id as needed
+
+
+ 
+} else {
+    // Handle the case where the parameters are missing
+    echo "Missing parameters.";
+  
+}
+
+
 
 
 ?>
@@ -638,90 +649,38 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Card body-->
 								<div class="card-body py-4">
 									<!--begin::Table-->
-									<form class="form w-100" action="<?php echo isset($_SERVER["PHP_SELF"]) ? htmlspecialchars($_SERVER["PHP_SELF"]) : ''; ?>" method="POST">
 
-											
-									<?php
-                                    if (isset($_POST["btn"])) {
-                                        $classes = Sanitize::sanitizeString($_POST["classes"]);
-										$subject = Sanitize::sanitizeString($_POST["subject"]);
-										$question = Sanitize::sanitizeString($_POST['question']);
-										$option_a = Sanitize::sanitizeString($_POST['option_a']);
-										$option_b = Sanitize::sanitizeString($_POST['option_b']);
-										$option_c = Sanitize::sanitizeString($_POST['option_c']);
-										$option_d = Sanitize::sanitizeString($_POST['option_d']);
-										$option_e = Sanitize::sanitizeString($_POST['option_e']);
-                                        $correct_option = Sanitize::sanitizeString($_POST['correct_option']);                               
-										//$Annexes->insertAnnex($annexName);
+									
 
-										$insertExam->insertExam($question, $option_a,$option_b, $option_c, $option_d, $option_e, $correct_option, $classes, $subject);
-                                    }
-                        ?>	
-                                        
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6" for="class"> Class  </label>
-                                            <select  class="form-control form-control-lg form-control-solid" name="classes" id = "classes" autocomplete="off">
-                                                <option value = ""> Select Class </option>
-												<?php $classes->dropdownClass(); ?>
-											</select>
-                                        </div>
-
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6" for="subject"> Subject  </label>
-                                            <select  class="form-control form-control-lg form-control-solid" name="subject" id = "subject" autocomplete="off">
-                                                <option value = ""> Select Subject </option>
-											 <?php	$course->dropDownCourses(); ?>
-											</select>
-                                        </div>
-
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6"  for = "question">Question </label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['question']) ? htmlspecialchars($_POST['question']) : ''; ?>" name="question" id="question" autocomplete="off">
-                                        </div>
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_a">Option a </label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_a']) ? htmlspecialchars($_POST['option_a']) : ''; ?>" name="option_a" id="option_a" autocomplete="off">
-                                        </div>
-										<div class="fv-row mb-5">
-                                        <label class="form-label fw-bolder text-dark fs-6"  for = "option_b"> Option b </label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_b']) ? htmlspecialchars($_POST['option_b']) : ''; ?>" name="option_b" id="option_b" autocomplete="off">
-                                        </div>
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_c">Option c </label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_c']) ? htmlspecialchars($_POST['option_c']) : ''; ?>" name="option_c" id="option_c" autocomplete="off">
-                                        </div>
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_d">Option d </label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_d']) ? htmlspecialchars($_POST['option_d']) : ''; ?>" name="option_d" id="option_d" autocomplete="off">
-                                        </div>
-										<div class="fv-row mb-5">
-                                            <label class="form-label fw-bolder text-dark fs-6"  for = "option_e">Option e </label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" value=" <?php echo isset($_POST['option_e']) ? htmlspecialchars($_POST['option_e']) : ''; ?>" name="option_e" id="option_e" autocomplete="off">
-                                        </div>
-										<div class="fv-row mb-5">
+									<form class="form w-100" id = "examForm" >
+										<?php
+									$validate_user->validateLink($student_id, $subject_id, $class_id);
+									
+								?>
+                                        <!--begin::Heading-->
+                                        <div class="mb-10">
 										
-                                            <label class="form-label fw-bolder text-dark fs-6"  for = "correct_option">correct_option </label>
-											<select  class="form-control form-control-lg form-control-solid" name="correct_option" id = "correct_option" autocomplete="off">
-                                                <option value = ""> Select Subject </option>
-											 	<option value = "option_a"> option_a</option>
-												 <option value = "option_b">option_b </option>
-												 <option value = "option_c"> option_c</option>
-												 <option value = "option_d">option_d </option>
-												 <option value = "option_e">option_e </option>
-											</select>
+                                            <!--begin::Title-->
+                                            <h1 class="text-dark mb-3">Start <?php echo $subject_name; ?> Exam</h1>
+                                            <!--end::Title-->
+											<div class="" style="font-size: 20px;" id="questionContainer"></div>
+        									<button class = "btn btn-lg btn-primary" type="button" id="nextQuestion">Next Question</button>
+                                            <!--begin::Link-->
+                                            <div class="text-gray-400 fw-bold fs-4">
+                                            <!-- <a href="../../demo3/dist/authentication/layouts/basic/sign-in.html" class="link-primary fw-bolder"></div> -->
+                                            <!--end::Link-->
+                                        </div>
+                                   
+            
+                                        
+            
+                                        <div class="fv-row mb-5" id = "single_page_question">
                                            
                                         </div>
-                                        <!--end::Input group-->
-                                        <!--begin::Input group-->
-                                        
-                                        <!--end::Input group-->
-                                        <!--begin::Actions-->
+                                       
             
-										<div class="row fv-row mb-7" style="float:left;">
-                                        <div class="col-xl-6">
-										<input type="submit" name="btn" class="btn btn-lg btn-primary" value="submit"  />
-										<a href="<?php echo $url; ?>">Click here to access the page</a>
-                                        </div><br><br>
+									
+            
             
             
             
@@ -3595,6 +3554,124 @@ License: For each use you must have a valid license purchased only from above li
 		<script src="assets/js/custom/modals/users-search.js"></script>
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
+
+        <script>
+
+        $(document).ready(function(){
+			var currentQuestionIndex = 0;
+    		var questions = [];
+            var subject_id = "<?php  echo $subject_id; ?>";
+			var class_id = "<?php  echo $class_id; ?>";
+			var totalScore = 0;
+
+			//alert("Hello " + subject_id);
+ 
+            function loadQuestions(){
+                    $.ajax({
+                        url: "./ajax/get_question.php",
+                        type: "POST",
+                        data:{
+							subject_id:subject_id, 
+							class_id:class_id,
+                          
+                        },
+						success: function(response) {
+							console.log("Response from server:", response);
+                			questions = JSON.parse(response);
+							if (Array.isArray(questions) && questions.length > 0) {
+        // Split options using the delimiter (';')
+        				questions.forEach(function(question) {
+            			question.options = question.options.split(';');
+        				});
+
+        					displayQuestion(currentQuestionIndex);
+    				} else {
+        					alert("No questions found or invalid data.");
+    						}
+
+            			},
+						error: function() {
+                		alert("Error fetching questions.");
+            			}
+                    })
+            }
+
+			function displayQuestion(index){
+				if(index < questions.length){
+					var question = questions[index];
+					var questionHtml = "<p>" + question.question_text + "</p>";
+					questionHtml += "<ol type='A'>";
+					for (var i = 0; i < question.options.length; i++) {
+								
+            questionHtml +=  "<li>" + "<input class = 'form-check-input me-3' type='radio' name='answer' value='" + question.options[i] + "'>" + "<label class = 'form-check-label'>" + question.options[i] + " </label></li>";
+			
+        }
+
+		questionHtml += "</ol>";
+			// 		$("#questionContainer").html("<p>" + question.question_text + "</p>");
+            // // Include radio buttons or other form elements for answers
+            // $("#questionContainer").append(question.options);
+			$("#questionContainer").html(questionHtml);
+				
+
+					if (index < questions.length - 1) {
+                		$("#nextQuestion").show();
+            			} 
+				}else{
+					// All questions have been displayed
+					$("#questionContainer").html("You have completed the exam. Total Score: " + totalScore);
+            		$("#nextQuestion").hide();
+
+            		// Save the total score to the database
+            		saveTotalScore(totalScore);
+					
+				}
+
+			}
+
+			function saveTotalScore(score) {
+        $.ajax({
+            url: "./ajax/save_exam_score.php",
+            type: "POST",
+            data: {
+                student_id: 2, // Replace with the actual student ID
+                subject_id: subject_id,
+                class_id: class_id,
+				exam_id: 1,
+                score: score
+            },
+            success: function(response) {
+                console.log(response); // Handle success response
+            },
+            error: function() {
+                alert("Error saving total score.");
+            }
+        });
+    }
+
+	loadQuestions();
+	$("#nextQuestion").click(function() {
+		
+		var selectedAnswer = $("input[name='answer']:checked").val();
+		var correctAnswer = questions[currentQuestionIndex].correct_option;
+		selectedAnswer = selectedAnswer.trim();
+		selectedAnswer = selectedAnswer.toLowerCase();
+		correctAnswer  = correctAnswer.trim();
+		correctAnswer = correctAnswer.toLowerCase();
+
+        if (selectedAnswer === correctAnswer) {
+            totalScore += 1; // Assuming each correct answer adds 1 mark
+			console.log(totalScore);
+        }
+		//alert("hello " + totalScore);
+
+        currentQuestionIndex++;
+        displayQuestion(currentQuestionIndex);
+    });
+
+        })
+
+        </script>
 	</body>
 	<!--end::Body-->
 </html>
