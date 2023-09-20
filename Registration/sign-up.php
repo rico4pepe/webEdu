@@ -70,7 +70,7 @@ License: For each use you must have a valid license purchased only from above li
                 <!--begin::Wrapper-->
                 <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
                     <!--begin::Form-->
-                    <form class="form w-100" method="post" onsubmit="return validateForm();">
+                    <form class="form w-100" method="POST" enctype="multipart/form-data" onsubmit="return validateForm();">
                         <!--begin::Heading-->
 
                         <?php
@@ -84,24 +84,32 @@ License: For each use you must have a valid license purchased only from above li
                                         $phone_No = trim($_POST["phone_No"]);
                                         $address = trim($_POST["address"]);
                                         $staff_role = trim($_POST["staff_role"]);
-                                        $myImage = trim($_POST["myImage"]);
-                                        $email = trim($_POST["email"]);
+                                       
+                                      
+                                        $targetDirectory = "../uploads/";
+                                        $targetFile = $targetDirectory . basename($_FILES["file"]["name"]);
+                                      
+                                        
+                                        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+                                        move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile);
+                                       
+                                        $email = $_POST["email"];
                                         $password = $_POST["password"];
                                         $pass = password_hash($password, PASSWORD_BCRYPT);
 
-                                        $fos = trim($_POST["fos"]);
-                                        $qual = trim($_POST["qual"]);
-                                        $annex_id = trim($_POST["annex_id"]);
-                                        $sex = trim($_POST["sex"]);
+                                        $fos = $_POST["fos"];
+                                        $qual = $_POST["qual"];
+                                        $annex_id = $_POST["annex_id"];
+                                        $sex = $_POST["sex"];
                                         $sUniqueId = $_POST["sUniqueId"];
 
-                                        $degree_date = trim($_POST["degree_date"]);
+                                        $degree_date = $_POST["degree_date"];
 
                                         
 
                                     
                                           
-                                    $Staff->insertUser($sUniqueId, $first_name,$last_name,$phone_No,$address,$staff_role,$myImage,$email,$pass,$sex,$qual, $annex_id, $fos, $degree_date);
+                                    $Staff->insertUser($sUniqueId, $first_name,$last_name,$phone_No,$address,$staff_role,$targetFile,$email,$pass,$sex,$qual, $annex_id, $fos, $degree_date);
                                     }
                         ?>
     
@@ -175,7 +183,7 @@ License: For each use you must have a valid license purchased only from above li
 
                             <div class="col-xl-6">
                                 <label class="form-label fw-bolder text-dark fs-6">Select Image</label>
-                                <input class="form-control form-control-lg form-control-solid" type="file" id="myImage" name="myImage"><br><br>
+                                <input class="form-control form-control-lg form-control-solid" type="file" id="file" name="file" accept="image/*"><br><br>
                             </div>
                         </div>
 

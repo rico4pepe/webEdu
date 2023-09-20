@@ -3,7 +3,7 @@ require_once("../PhpConnections/connection.php");
 
 class learners
 {
-    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $myImag, $unique_id, $unique_password)
+    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $unique_id, $unique_password, $myImag)
     {
         $conn = connect();
 

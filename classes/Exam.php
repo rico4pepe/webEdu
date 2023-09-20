@@ -99,55 +99,78 @@ class Exam
             }
     }
 
-    public function generateLink($exam_link, $subject_id,  $class_id, $term_id, $session_id, $start_time, $end_time, $publish, $status){
+    public function generateLink($exam_link, $subject_id,  $class_id,  $start_time, $end_time)
+    {
         $conn = connect();
-        $sql = "INSERT INTO `exam_link` (`exam_link`,`subject_id`, `class_id`, `term_id`, `session_id`, `start_time`, `end_time`,  `publish`, `status`) VALUES " . "( :el, :si, :ci, :ti, :si, :st, :et, :pb, :st)";
-        try {
-            //code...
-            $stmt = $conn->prepare($sql); 
-        $stmt->bindValue(":qt", $exam_link, PDO::PARAM_STR);
-        $stmt->bindValue(":oa", $subject_id, PDO::PARAM_STR);
-        $stmt->bindValue(":ob", $class_id, PDO::PARAM_STR);
-
-        $stmt->bindValue(":oc", $term_id, PDO::PARAM_STR);
-        $stmt->bindValue(":od", $session_id, PDO::PARAM_STR);
-        $stmt->bindValue(":oe", $start_time, PDO::PARAM_STR);
-        $stmt->bindValue(":ci", $end_time, PDO::PARAM_STR);
-        $stmt->bindValue(":si", $publish, PDO::PARAM_STR);
-        $stmt->bindValue(":ui", $status, PDO::PARAM_STR);
-
-
-        $stmt->execute();
-
-        $num_rows = $stmt->rowCount();
-        if ($num_rows  > 0) {
-        
-            $msg = "Exam Link was generated entered";
-          $msgType = "success";
-
-          ?>
-        <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
-                    <?php echo $msg; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-       <?php   
-        }else {
-            $msg = "Exam Link was not generated";
+        $check_link_exist_query = "SELECT exams_link from exam_link where subject_id = :sjd AND 
+        class_id = :cld";
+        $check_link_exist_stmt = $conn->prepare($check_link_exist_query);
+        $check_link_exist_stmt->bindValue(":sjd", $subject_id, PDO::PARAM_STR);
+        $check_link_exist_stmt->bindValue(":cld", $class_id, PDO::PARAM_STR);
+        $check_link_exist_stmt->execute();
+        $num_rows = $check_link_exist_stmt->rowCount();
+        if($num_rows > 0)
+        {
+            $msg = "Exam Link already exist";
             $msgType = "warning";
             ?>
-             <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
-                    <?php echo $msg; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-         <?php   
-          }
-
-       
-        } catch (Exception $ex) {
-            //throw $th;
-            echo $ex->getMessage();
-        }
+            <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                        <?php echo $msg; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+    
+           <?php 
+           }else
+           {
+            $sql = "INSERT INTO `exam_link` (`exam_link`,`subject_id`, `class_id`,  `start_time`, `end_time`) VALUES " . "( :el, :si, :ci, :ti, :si, :st, :et)";
+            try {
+                //code...
+                $stmt = $conn->prepare($sql); 
+            $stmt->bindValue(":qt", $exam_link, PDO::PARAM_STR);
+            $stmt->bindValue(":oa", $subject_id, PDO::PARAM_STR);
+            $stmt->bindValue(":ob", $class_id, PDO::PARAM_STR);
+    
+            // $stmt->bindValue(":oc", $term_id, PDO::PARAM_STR);
+            // $stmt->bindValue(":od", $session_id, PDO::PARAM_STR);
+            $stmt->bindValue(":oe", $start_time, PDO::PARAM_STR);
+            $stmt->bindValue(":ci", $end_time, PDO::PARAM_STR);
+            // $stmt->bindValue(":si", $publish, PDO::PARAM_STR);
+            // $stmt->bindValue(":ui", $status, PDO::PARAM_STR);
+    
+    
+            $stmt->execute();
+    
+            $num_rows = $stmt->rowCount();
+            if ($num_rows  > 0) {
+            
+                $msg = "Exam Link was generated sucessfully";
+              $msgType = "success";
+    
+              ?>
+            <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                        <?php echo $msg; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+    
+           <?php   
+            }else {
+                $msg = "Exam Link was not generated";
+                $msgType = "warning";
+                ?>
+                 <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                        <?php echo $msg; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+             <?php   
+              }
+    
+           
+            } catch (Exception $ex) {
+                //throw $th;
+                echo $ex->getMessage();
+            }
+            }
+        
 
     }
 
@@ -200,6 +223,65 @@ public function validateLink($student_id, $subject_id, $class_id){
     }
 }
     
+
+
+public function fetchDropdownSubjectByUser($user_id){
+    $conn = connect();
+        try {
+            //code...
+            $sql = "SELECT DISTINCT question_answer.subject_id, subjects.Name FROM `question_answer` JOIN subjects ON 
+            question_answer.subject_id = subjects.id WHERE user_id = :id";
+            $stmt = $conn->prepare($sql); 
+            $stmt->bindValue(":id", $user_id, PDO::PARAM_STR);
+            $stmt->execute();
+            
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $name_id = $row['subject_id'];
+           $subject_name = $row['Name'];
+
+            echo '<option value=" '. $name_id .'" >'.$subject_name.'</option>';
+   }
+        } catch (Exception $ex) {
+            //throw $th;
+            echo $ex->getMessage();
+        }    
+}
+
+
+public function fetchDropdownClassByUser($user_id){
+    $conn = connect();
+        try {
+            //code...
+            $sql = "SELECT DISTINCT question_answer.class_id, school_class.class_name FROM `question_answer` JOIN school_class ON 
+            question_answer.class_id = school_class.id WHERE user_id = :id";
+            $stmt = $conn->prepare($sql); 
+            $stmt->bindValue(":id", $user_id, PDO::PARAM_STR);
+            $stmt->execute();
+            
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $name_id = $row['class_id'];
+           $subject_name = $row['class_name'];
+
+            echo '<option value=" '. $name_id .'" >'.$subject_name.'</option>';
+   }
+        } catch (Exception $ex) {
+            //throw $th;
+            echo $ex->getMessage();
+        }    
+}
+public function fetchExamByUser($user_id){
+    $conn = connect();
+        try {
+            //code...
+            $sql = "select * from exam  where id = :ud";
+            $stmt = $conn->prepare($sql); 
+            $stmt->bindValue(":ud", $user_id, PDO::PARAM_STR);
+            $stmt->execute();
+        } catch (Exception $ex) {
+            //throw $th;
+            echo $ex->getMessage();
+        }    
+}
 
     
     

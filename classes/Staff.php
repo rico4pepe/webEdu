@@ -9,13 +9,33 @@ require_once("AuditLog.php");
 
 class Staff
 {
-    function insertUser($sUniqueId, $first_name, $last_name, $phone_No, $address, $staff_role, $myImag, $email, $pass, $sex, $degree, $annex_id, $discipline,   $degree_date)
+    function insertUser($sUniqueId, $first_name, $last_name, $phone_No, $address, $staff_role, $targetFile, $email, $pass, $sex, $degree, $annex_id, $discipline,   $degree_date)
     {
         $conn = connect();
 
         $created_At = date("Y-m-d H:i:s");
         $modified_At = date("Y-m-d H:i:s");
         $Is_Deleted = 0;
+        $check_email_exist = "SELECT Email from staff_db where Email = :em";
+        $check_email_exist_query = $conn->prepare($check_email_exist);
+        $check_email_exist_query->bindValue(":em", $email);
+        $check_email_exist_query->execute();
+        $num_rows1 = $check_email_exist_query->rowCount();
+        if($num_rows1  > 0){
+            $msg = "Email already exist.";
+            $msgType = "warning";
+  
+            ?>
+          <div class="alert alert-<?php echo $msgType; ?> alert-dismissible fade show" role="alert">
+                      <?php echo $msg; ?>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+  
+         <?php
+        }else{
+
+        
+
 
         $sql = "INSERT INTO `staff_db` (`staff_uniqueKey`,`First_Name`, `Sur_Name`, `phone_number`, `Address`, `role`, `imageUrl`,`Email`,  `password`,  `sex`, `degree`, `annex_id`,  `discipline`,  `degree_date` ) VALUES " . "( :suiq, :fname, :lname, :pnum, :add, :stf_role, :img_url, :email, :pass, :sx, :dg, :ai, :disc, :ddate)";
 
@@ -28,8 +48,9 @@ class Staff
 
         $stmt->bindValue(":add", $address);
         $stmt->bindValue(":stf_role", $staff_role);
-        $stmt->bindValue(":img_url", $myImag);
+        $stmt->bindValue(":img_url", $targetFile);
         $stmt->bindValue(":email", $email);
+         
 
         //Password Hashing
         $stmt->bindValue(":pass", $pass);
@@ -82,8 +103,8 @@ class Staff
             //throw $th;
             echo $ex->getMessage();
         }
-        
     }
+}
 
 
     function dropdownFacilitator(){
