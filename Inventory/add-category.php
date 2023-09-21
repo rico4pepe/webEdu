@@ -67,7 +67,7 @@ License: For each use you must have a valid license purchased only from above li
 					</div>
 					<!--end::Brand-->
 					<!--begin::Aside menu-->
-					<?php	include_once("../asideMenu/sidebarMenu.html"); ?>
+					<?php	include_once("../asideMenu/sidebarMenu.php"); ?>
 </div>
 					<div class="aside-footer flex-column-auto px-9" id="kt_aside_footer">
 						<!--begin::User panel-->

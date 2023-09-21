@@ -3,7 +3,7 @@ require_once("../PhpConnections/connection.php");
 
 class learners
 {
-    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $unique_id, $unique_password, $myImag)
+    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $unique_id, $unique_password, $targetFile)
     {
         $conn = connect();
 
@@ -12,7 +12,7 @@ class learners
         $Is_Deleted = 0;
 
         $sql = "INSERT INTO `learners_bd` (`First_Name`, `Second_name`, `SurName`, `Sex`, `Date_of_birth`, `Guidance_Email`,`Guidance_phone_No`,`address`, `State_Of_origin`,`Blood_Group`,`Geno_Type`,`Guidance_Occupation`,`student_unique_id`, `password`, `imageUrl`) 
-        VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :img_url, :ui, :up)";
+        VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :ui, :up, :img_url )";
             try {
                 //code...
                 $stmt = $conn->prepare($sql);
@@ -31,7 +31,7 @@ class learners
         $stmt->bindValue(":GD_Occptn", $Guidance_Occupation);
         $stmt->bindValue(":ui", $unique_id);
         $stmt->bindValue(":up", $unique_password);
-        $stmt->bindValue(":img_url", $myImag);
+        $stmt->bindValue(":img_url", $targetFile);
         $stmt->execute();
         $num_rows2 = $stmt->rowCount();
         if($num_rows2 > 0){

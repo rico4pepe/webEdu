@@ -1,18 +1,21 @@
 <?php 
-
+require_once("../PhpConnections/session.php");
+require_once("../PhpConnections/connection.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 
 
 
-require_once("../PhpConnections/connection.php");
+
 $conn = connect();
 
 if(isset($_GET['id'])) {
 	$id = $_GET['id'];
+  }else{
+		$id = $session_id;
+  }
 
-
-	$users_query  = $conn->query("SELECT t1.staff_uniqueKey,t1.First_Name, t1.Sur_Name,t1.Email,t1.imageUrl, t1.phone_number, t1.Address, t1.degree, t1.discipline, t2.name, t3.annex_name FROM `staff_db` t1 JOIN roles t2 on t1.role = t2.id JOIN annex t3 on t3.id = t1.annex_id where t1.staff_ID = '$id'");
+  $users_query  = $conn->query("SELECT t1.staff_uniqueKey,t1.First_Name, t1.Sur_Name,t1.Email,t1.imageUrl, t1.phone_number, t1.Address, t1.degree, t1.discipline, t2.name, t3.annex_name FROM `staff_db` t1 JOIN roles t2 on t1.role = t2.id JOIN annex t3 on t3.id = t1.annex_id where t1.staff_ID = '$id'");
 $users_row = $users_query ->fetch((PDO::FETCH_ASSOC));
 
 
@@ -37,7 +40,6 @@ $name = $users_row['name'];
 $annex_name = $users_row['annex_name'];
 $imageName = $users_row['imageUrl'];
 
-  }
 
 
 
@@ -106,7 +108,7 @@ License: For each use you must have a valid license purchased only from above li
 					</div>
 					<!--end::Brand-->
 					<!--begin::Aside menu-->
-										<?php	include_once("../asideMenu/sidebarMenu.html"); ?>
+										<?php	include_once("../asideMenu/sidebarMenu.php"); ?>
 </div>
 					<!--end::Aside menu-->
 
@@ -2114,7 +2116,8 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin::Card toolbar-->
 													<div class="card-toolbar">
 														<!--begin::Filter-->
-														<button type="button" class="btn btn-sm btn-flex btn-light-primary" id="kt_modal_sign_out_sesions">
+														<form action="./utilites/Logout.php" method = "POST">
+														<button type="submit" class="btn btn-sm btn-flex btn-light-primary" >
 														<!--begin::Svg Icon | path: icons/duotune/arrows/arr077.svg-->
 														<span class="svg-icon svg-icon-3">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -2124,6 +2127,7 @@ License: For each use you must have a valid license purchased only from above li
 															</svg>
 														</span>
 														<!--end::Svg Icon-->Sign out all sessions</button>
+									</form>
 														<!--end::Filter-->
 													</div>
 													<!--end::Card toolbar-->

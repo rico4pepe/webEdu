@@ -4,6 +4,7 @@ require_once("../utilites/ValidateMail.php");
 require_once("../utilites/Sanitize.php");
 require_once("AuditLog.php");
 
+
 //Think of solving url issues
 
 
@@ -163,22 +164,30 @@ class Staff
                     $login_audit->audit_login($action, $password);
                 
                     $_SESSION['id']=$row['staff_ID'];
-                    header("location:../Dashboard.php");
-
-
+                    $usserole = $row['role'];
+                    if($usserole == 1){
+                        header("location:../Dashboard.php");
+                    }else{
+                        header("location:../userManagement/viewStaff.php");
+                    }                
                 }
               
             }else{
 
-                $query = "SELECT * FROM  learners_bd WHERE student_unique_id = :uk AND password  = :pa ";
+                $query = "SELECT * FROM  learners_bd WHERE student_unique_id = :uk";
 				$res = $conn->prepare($query);
 				$res->bindValue(":uk", $username, PDO::PARAM_STR);
-				$res->bindValue(":pa", $password, PDO::PARAM_STR);
+				// $res->bindValue(":pa", $password, PDO::PARAM_STR);
 				$res->execute();
                 $num_rows = $res->rowCount();
                 if($num_rows > 0){
                 $row = $res->fetch(PDO::FETCH_ASSOC);
-                $_SESSION['id']=$row['ID'];
+                $storedPasswordHash = $row['password'];
+                        if (password_verify($password, $storedPasswordHash)) {
+                            // Password is correct
+                            $_SESSION['id'] = $row['ID'];
+                            header("location:../student/viewStudent.php");
+                        } 
                 }
             }
     }

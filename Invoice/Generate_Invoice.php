@@ -93,7 +93,7 @@ License: For each use you must have a valid license purchased only from above li
 					</div>
 					<!--end::Brand-->
 					<!--begin::Aside menu-->
-					<?php	include_once("../asideMenu/sidebarMenu.html"); ?>
+					<?php	include_once("../asideMenu/sidebarMenu.php"); ?>
 					</div>
 						<!--begin::Aside Menu-->
 						<div class="w-100 hover-scroll-overlay-y d-flex pe-2" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu, #kt_aside_menu_wrapper" data-kt-scroll-offset="100">
