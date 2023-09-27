@@ -295,6 +295,19 @@ if ($userrole == "student"){
                             </div>	
                         </div>
                         <?php
+                                }else if ($userrole == 3){
+                                        ?>
+                                     <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link" href="./lessonNote/allStaff_LessonNotes.php">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title"> View All Lesson Note</span>
+                                </a>
+                            </div>	
+                        </div>
+                               <?php
                                 }
                         ?>
                        
@@ -639,7 +652,7 @@ if ($userrole == "student"){
                                 }elseif ($userrole == 4){
                                 ?> 
                                    <div class="menu-item">
-                               <a class="menu-link active" href="./href="./userManagement/viewStaff.php">
+                               <a class="menu-link active" href="./userManagement/viewStaff.php">
                                    <span class="menu-icon">
                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
                                        <span class="svg-icon svg-icon-5">

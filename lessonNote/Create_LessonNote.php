@@ -3,11 +3,27 @@ require_once("../PhpConnections/session.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 
+require_once("../PhpConnections/connection.php"); 
 require_once('../classes/SchoolClass.php');
 require_once('../classes/Subjects.php');
 require_once('../classes/Role.php');
 require_once('../classes/LessonNotes.php');
 
+$conn = connect();
+
+$query = "SELECT * FROM staff_db WHERE staff_ID = :sd";
+	$res = $conn->prepare($query);
+	$res->bindValue(":sd", $session_id, PDO::PARAM_STR);
+	$res->execute();
+  $row = $res->fetch(PDO::FETCH_ASSOC);
+  
+  if ($row) {
+	$annex_id =  $row['annex_id'];
+	$userrole = $row['role'];
+} else {
+	$username = null; // Return null or handle the case where no result is found
+	$userrole = null;
+}
 
 
 
@@ -646,7 +662,7 @@ License: For each use you must have a valid license purchased only from above li
 										
                                                                        
 										
-                                        $LessonNote->insertLessonNotes( $title, $desc,$class_id, $subject_id,$sendTo) ;
+                                        $LessonNote->insertLessonNotes( $title, $desc,$class_id, $subject_id,$sendTo,$session_id) ;
                                     }
                         ?>
                                         <!--begin::Heading-->
@@ -700,7 +716,7 @@ License: For each use you must have a valid license purchased only from above li
                                           
                                             <select  class="form-control form-control-lg form-control-solid kt-multiselect" name="sendTo"  autocomplete="off" required>
                                                 <option value=""> Select role to send to</option>
-                                                <?php $Roles->dropdownRoles(); ?>
+                                                <?php $Roles->lessonNoteDropdownRole($annex_id); ?>
                                             </select>
                                         </div>
                                        

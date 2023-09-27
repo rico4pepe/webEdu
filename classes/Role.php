@@ -67,4 +67,22 @@ class Role
             echo '<option value=" '. $role_id .'" >'.$role_name.'</option>';
    }
     }
+
+    function lessonNoteDropdownRole($annex){
+        $conn = connect();
+        $role = 3;
+        $sql = "SELECT staff_db.role, roles.name FROM staff_db JOIN roles ON roles.id = staff_db.role WHERE staff_db.annex_id = :sid AND staff_db.role = :srl";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(":sid", $annex);
+        $stmt->bindValue(":srl", $role);
+        $stmt->execute();
+
+        while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $role_id = $row['role'];
+           $role_name = $row['name'];
+
+            echo '<option value=" '. $role_id .'" >'.$role_name.'</option>';
+   }
+
+    }
 }

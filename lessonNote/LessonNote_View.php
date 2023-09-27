@@ -1,21 +1,37 @@
 <?php 
-
+require_once("../PhpConnections/session.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 require_once("../PhpConnections/connection.php");
+require_once("../classes/LessonNotes.php");
 
+$updateLessonNote = new LessonNotes();
 
 $conn = connect();
 
 
 $id = $Note_Tittle = $Note_Description = null;
-$id = $_GET['id'];
+if(isset($_GET['id'])){
+	$id = $_GET['id'];
+}
+
 $users_query  = $conn->query("SELECT id, Note_Tittle, Note_Description FROM `lesson_note` where id = '$id'");
 $users_row = $users_query ->fetch((PDO::FETCH_ASSOC));
 
 $id = $users_row['id'];
 $Note_Tittle = $users_row['Note_Tittle'];
 $Note_Description = $users_row['Note_Description'];
+
+$query = "SELECT * FROM staff_db WHERE staff_ID = :sd";
+	$res = $conn->prepare($query);
+	$res->bindValue(":sd", $session_id, PDO::PARAM_STR);
+	$res->execute();
+  $row = $res->fetch(PDO::FETCH_ASSOC);
+  if ($row) {
+	$userrole = $row['role'];
+} else {
+	$userrole = null;
+}
 
 
 
@@ -632,18 +648,30 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Card body-->
 								<div class="card-body py-4">
 									<!--begin::Table-->
-									<form class="form w-100" method="POST">
+									<?php
+											if (isset($_POST['btn'])) {
+												$title = $_POST["title"];
+												$desc  = $_POST["desc"];
+
+												$updateLessonNote->updateLessonNote($title, $desc, $id);
+											}elseif(isset($_POST['send'])){
+												$comment = $_POST['comment'];
+												$updateLessonNote->updatecomment($comment, $id);
+											}
+											
+									?>
+									<form class="form w-100" action="" method="POST">
 
 								
                                         <div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Title</label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" name="title" value="<?php echo $Note_Tittle; ?>" autocomplete="off" disabled>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" name="title" value="<?php echo $Note_Tittle; ?>" autocomplete="off">
                                            
                                         </div>
                                         
                                         <div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Description</label>
-                                            <textarea  class="form-control form-control-lg form-control-solid"  name="desc"autocomplete="off" disabled><?php echo $Note_Description; ?></textarea>
+                                            <textarea  class="form-control form-control-lg form-control-solid"  name="desc"autocomplete="off"><?php echo $Note_Description; ?></textarea>
                                                 
                                             
                                         </div>
@@ -657,20 +685,34 @@ License: For each use you must have a valid license purchased only from above li
                                                 // }
                                         ?>
 
-
-										<div class="fv-row mb-5">
+									<?php
+										if($userrole == 3){
+										?>
+											<div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Status</label>
-                                            <select  class="form-control form-control-lg form-control-solid" name="class" autocomplete="off" required>
+                                            <select  class="form-control form-control-lg form-control-solid" name="status" id="status" autocomplete="off" required>
                                                 <option value="Review"> Review</option>
 												<option value="Acknowledged"> Acknowledged</option>
 												<option value="Rejected"> Rejected</option>
                                                 
                                             </select>
                                         </div>
-
-                                        <div class="fv-row mb-5">
+										<div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Comment</label>
-                                            <input  class="form-control form-control-lg form-control-solid" type="text" name="title" value="" autocomplete="off" disabled>
+                                            <input  class="form-control form-control-lg form-control-solid" type="text" name="comment" id="comment" value="" autocomplete="off" disabled>
+                                           
+                                        </div>
+									<?php	
+										}
+										?>
+
+									
+
+                                      
+
+										<div class="row fv-row mb-7" style="float:left;">
+                                        <div class="col-xl-6">
+										<input type="submit" name="btn" id="btn" class="btn btn-lg btn-primary" value="Send"  />
                                            
                                         </div>
 
@@ -3553,5 +3595,28 @@ License: For each use you must have a valid license purchased only from above li
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
 	</body>
+
+	<script>
+$(document).ready(function() {
+  let userrole = <?php echo $userrole; ?>; // Get the user role value from PHP
+
+  if (userrole == 4) {
+    // If userrole is not 3, remove the "disabled" attribute from input fields
+    $('input, textarea').prop('disabled', false);
+    // Change the button text to "Submit"
+    $('input[name="btn"]').val('Submit');
+  } else {
+    // If userrole is 3, add the "disabled" attribute to input fields
+    $('input, textarea').prop('disabled', true);
+   $('#comment').prop('disabled', false)
+    // Change the button text to "Send"
+	$('#comment').prop('disabled', false)
+    $('input[name="btn"]').val('Send');
+	// Change the name attribute of the button to "send"
+$('input[type="submit"]').attr('name', 'send');
+
+  }
+});
+</script>
 	<!--end::Body-->
 </html>

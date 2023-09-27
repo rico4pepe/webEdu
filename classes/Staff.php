@@ -10,7 +10,9 @@ require_once("AuditLog.php");
 
 class Staff
 {
-    function insertUser($sUniqueId, $first_name, $last_name, $phone_No, $address, $staff_role, $targetFile, $email, $pass, $sex, $degree, $annex_id, $discipline,   $degree_date)
+    function insertUser($sUniqueId, $first_name, $last_name, 
+    $phone_No, $address, $staff_role, $targetFile, $email, $pass, 
+    $sex, $degree, $annex_id, $discipline,   $degree_date)
     {
         $conn = connect();
 
@@ -53,7 +55,7 @@ class Staff
         $stmt->bindValue(":email", $email);
          
 
-        //Password Hashing
+        //Password Hashing 
         $stmt->bindValue(":pass", $pass);
         //End Password Hashing
 

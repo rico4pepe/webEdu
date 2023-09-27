@@ -3,6 +3,9 @@ require_once("../PhpConnections/session.php");
 require_once("../PhpConnections/connection.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
+require_once ("../classes/LessonNotes.php");
+
+$allNotes = new LessonNotes();
 
 
 
@@ -1158,10 +1161,9 @@ License: For each use you must have a valid license purchased only from above li
 											<!--begin::Table row-->
 										<?php
                                         
-											$stmt = $conn->prepare("SELECT id, Note_Tittle, Note_Description, status FROM `lesson_note` where user_id = :ui");
-											$stmt->bindValue(":ui", $session_id, PDO::PARAM_STR);
-        									$stmt->execute();
-					while($row = $stmt->fetch(PDO::FETCH_ASSOC))
+                                           $response = $allNotes->viewAllLessonNotes();
+											
+					foreach ($response as $row)
 					{
 
             		$id = $row['id'];
@@ -1226,16 +1228,13 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin::Menu-->
 													<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
 														<!--begin::Menu item-->
-														<?php
-														if($row['status'] != "Acknowledged"){
+														
+													
 															?>
 															<div class="menu-item px-3">
 															<a href="<?php echo './lessonNote/LessonNote_View.php?id='.$id; ?>" class="menu-link px-3">Edit</a>
 														</div>
-													<?php		
-														}
-
-														?>
+													
 														
 														<!--end::Menu item-->
 														<!--begin::Menu item-->
