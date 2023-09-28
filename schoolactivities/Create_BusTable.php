@@ -1,24 +1,20 @@
 <?php 
-
+require_once("../PhpConnections/session.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 
 require_once('../classes/SchoolClass.php');
-require_once('../classes/Subjects.php');
-require_once('../classes/Role.php');
-require_once('../classes/SchoolTimetable.php');
-
+require_once('../classes/BusTimeTable.php');
 require_once('../classes/Days.php');
-
 require_once('../classes/Staff.php');
 
 
 
 
-$SchoolClasses = new SchoolClass();
-$Subjects = new Subjects();
-$Roles = new Role();
-$Timetable = new schoolTimetable();
+
+
+
+$bustable = new BusTimeTable();
 $Days = new Days();
 $Staff = new Staff();
 
@@ -643,14 +639,14 @@ License: For each use you must have a valid license purchased only from above li
 
                                     //Paused for now
                                     if (isset($_POST["btn"])) {
-                                        $class_id = $_POST["class"];
-                                        $subject_id = $_POST["subject"];
+                                        $driver = $_POST["driver"];
+                                        $routes = $_POST["routes"];
 
                                         $days = $_POST["days"];
+                                        $bus = $_POST["bus"];
                                         $facilitator = $_POST["facilitator"];
-                                        $stime = $_POST["stime"];
-                                        $etime = $_POST["etime"];
-                                        $doexam = $_POST["doexam"];
+                                        $datee = $_POST["datee"];
+                                    
                                        
 
 
@@ -659,7 +655,7 @@ License: For each use you must have a valid license purchased only from above li
 										
                                                                        
 										
-                                        $Timetable->insertTimeTable( $class_id, $subject_id, $days, $facilitator, $stime, $etime, $doexam ) ;
+                                        $bustable->bustimetable($datee, $driver, $routes, $bus, $facilitator, $days) ;
                                     }
                         ?>
                                         <!--begin::Heading-->
@@ -673,14 +669,17 @@ License: For each use you must have a valid license purchased only from above li
                                             <!--end::Link-->
                                         </div>
                                    
-
-                                        <div class="fv-row mb-5">
+										<div class="fv-row mb-5">
+                                            <label class="form-label fw-bolder text-dark fs-6"> Driver Name</label>
+                                            <input type="text" class="form-control form-control-lg form-control-solid" name = "driver"   placeholder="Driver Name">
+                                        </div>
+                                        <!-- <div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Driver</label>
                                             <select  class="form-control form-control-lg form-control-solid" name="driver" autocomplete="off" required>
                                                 <option value=""> Select Driver</option>
-                                                <?php $Staff ->dropdownDriver(); ?>
+                                                <?php //$Staff ->dropdownDriver(); ?>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         
 
                                         <div class="fv-row mb-5">
@@ -691,7 +690,7 @@ License: For each use you must have a valid license purchased only from above li
 
                                         <div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Bus</label>
-                                            <input type="text" class="form-control form-control-lg form-control-solid" name = "routes"   placeholder="Bus">
+                                            <input type="text" class="form-control form-control-lg form-control-solid" name = "bus"   placeholder="Bus">
                                         </div>
                                         
             
@@ -718,7 +717,7 @@ License: For each use you must have a valid license purchased only from above li
                                         <div class="fv-row mb-5">
                                             <label class="form-label fw-bolder text-dark fs-6"> Date </label>
                                             
-                                            <input type="date" class="form-control form-control-lg form-control-solid"  name = "doexam"  placeholder="Select date">
+                                            <input type="date" class="form-control form-control-lg form-control-solid"  name = "datee"  placeholder="Select date">
                                          
                                         </div>
 

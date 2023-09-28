@@ -19,6 +19,7 @@ Class schoolTimetable{
         $conn = connect();
 
         $sql = "INSERT INTO `SchoolTimetable` (`school_class_id`, `Days`,`Subjects`,`facilitator`,`Start_Time`,`End_Time`,`exam_date`) VALUES " . "(:cid,:did, :sid,:fid,:stm, :etm, :doe)";
+        
 
        
   

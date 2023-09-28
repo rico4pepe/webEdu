@@ -108,12 +108,14 @@ class LessonNotes
     
  }
 
- function updatecomment($comment, $id){
+ function updatecomment($status, $comment,  $id){
     $conn = connect();
-    $sql = "UPDATE lesson_note SET comment=:cd WHERE id=:id";
+    $sql = "UPDATE lesson_note SET comment=:cd, status =:st WHERE id=:id";
     try{
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(":cd", $comment);
+        $stmt->bindValue(":st", $status);
+        $stmt->bindValue(":id", $id);
         if($stmt->execute()){
             $msg = "HM Feedback has been sent.";
             $msgType = "success";

@@ -178,16 +178,23 @@ class Staff
 
                 $query = "SELECT * FROM  learners_bd WHERE student_unique_id = :uk";
 				$res = $conn->prepare($query);
+               
+                
 				$res->bindValue(":uk", $username, PDO::PARAM_STR);
 				// $res->bindValue(":pa", $password, PDO::PARAM_STR);
 				$res->execute();
                 $num_rows = $res->rowCount();
+
                 if($num_rows > 0){
                 $row = $res->fetch(PDO::FETCH_ASSOC);
+                //print_r($row);
+           
                 $storedPasswordHash = $row['password'];
                         if (password_verify($password, $storedPasswordHash)) {
                             // Password is correct
                             $_SESSION['id'] = $row['ID'];
+                        
+                            
                             header("location:../student/viewStudent.php");
                         } 
                 }

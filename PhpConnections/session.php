@@ -7,4 +7,6 @@ if (!isset($_SESSION['id']) || (trim($_SESSION['id']) == '')) {
     exit();
 }
 $session_id=$_SESSION['id'];
+//echo $session_id;
+
 ?>

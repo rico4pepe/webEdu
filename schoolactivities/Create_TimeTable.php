@@ -1,5 +1,5 @@
 <?php 
-
+require_once("../PhpConnections/session.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 
@@ -663,7 +663,7 @@ License: For each use you must have a valid license purchased only from above li
                                         <!--begin::Heading-->
                                         <div class="mb-10 text-center">
                                             <!--begin::Title-->
-                                            <h1 class="text-dark mb-3">Create-Lesson Note</h1>
+                                            <h1 class="text-dark mb-3">Create-Time Table</h1>
                                             <!--end::Title-->
                                             <!--begin::Link-->
                                             <div class="text-gray-400 fw-bold fs-4">

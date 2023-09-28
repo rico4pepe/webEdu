@@ -655,8 +655,10 @@ License: For each use you must have a valid license purchased only from above li
 
 												$updateLessonNote->updateLessonNote($title, $desc, $id);
 											}elseif(isset($_POST['send'])){
+													
 												$comment = $_POST['comment'];
-												$updateLessonNote->updatecomment($comment, $id);
+												$status = $_POST['status'];
+												$updateLessonNote->updatecomment($status,$comment, $id);
 											}
 											
 									?>
@@ -3614,6 +3616,7 @@ $(document).ready(function() {
     $('input[name="btn"]').val('Send');
 	// Change the name attribute of the button to "send"
 $('input[type="submit"]').attr('name', 'send');
+$('#btn').prop('disabled', false)
 
   }
 });

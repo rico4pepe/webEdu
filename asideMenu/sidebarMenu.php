@@ -47,7 +47,56 @@ $conn = connect();
 
                 <?php    
 if ($userrole == "student"){
-                                ?> 
+                                ?>
+                                
+                                <div class="menu-item">
+                               <a class="menu-link active" href="./href="./userManagement/viewStaff.php">
+                                   <span class="menu-icon">
+                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
+                                       <span class="svg-icon svg-icon-5">
+                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                               <path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
+                                               <path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
+                                           </svg>
+                                       </span>
+                                       <!--end::Svg Icon-->
+                                   </span>
+                                   <span class="menu-title">View Report Card</span>
+                               </a>
+                           </div>
+
+                           <div class="menu-item">
+                               <a class="menu-link active" href="./href="./userManagement/viewStaff.php">
+                                   <span class="menu-icon">
+                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
+                                       <span class="svg-icon svg-icon-5">
+                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                               <path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
+                                               <path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
+                                           </svg>
+                                       </span>
+                                       <!--end::Svg Icon-->
+                                   </span>
+                                   <span class="menu-title">View Your Time Table</span>
+                               </a>
+                           </div>
+
+                           <div class="menu-item">
+                               <a class="menu-link active" href="./href="./userManagement/viewStaff.php">
+                                   <span class="menu-icon">
+                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
+                                       <span class="svg-icon svg-icon-5">
+                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                               <path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="black" />
+                                               <path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="black" />
+                                           </svg>
+                                       </span>
+                                       <!--end::Svg Icon-->
+                                   </span>
+                                   <span class="menu-title">View Your Bus Time Tab</span>
+                               </a>
+                           </div>
+                                
                                    <div class="menu-item">
                                <a class="menu-link active" href="./href="./userManagement/viewStaff.php">
                                    <span class="menu-icon">
@@ -144,9 +193,10 @@ if ($userrole == "student"){
                             </div>
                         </div>
                     </div>
-
-
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                        <?php
+                    if($userrole == 1){
+                        ?>
+                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                         <span class="menu-link">
                             <span class="menu-icon">
                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr001.svg-->
@@ -185,6 +235,10 @@ if ($userrole == "student"){
 
                     </div>
 
+                   <?php     
+                    }
+                    ?>
+                   
                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                         <span class="menu-link">
                             <span class="menu-icon">
