@@ -3,9 +3,14 @@ require_once("../PhpConnections/session.php");
 ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 
+require_once('../classes/Session.php');
+require_once('../classes/Term.php');
 require_once('../classes/AcademicSession.php');
 
-$AcademicYear = new AcademicSession();
+
+$sessions_db = new Session();
+$term = new Term();
+$activatesessionterm = new AcademicSession();
 
 ?>
 <!DOCTYPE html>
@@ -619,7 +624,7 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Card body-->
 								<div class="card-body py-4">
 									<!--begin::Table-->
-									<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form">
+									<form class="form w-100" method="POST" novalidate="novalidate" id="kt_sign_up_form">
 
 												
 									<?php
@@ -629,7 +634,7 @@ License: For each use you must have a valid license purchased only from above li
 
 										
                                                                        
-										$AcademicYear->activateSessionTerm( $academic_year, $term);
+										$activatesessionterm->activateSessionTerm( $academic_year, $term);
                                     }
                         ?>
                                         <!--begin::Heading-->
@@ -654,7 +659,7 @@ License: For each use you must have a valid license purchased only from above li
                                             <select  name="academic_year"  class="form-control form-control-lg form-control-solid"  autocomplete="off">
 											<option value = ""> Select Session</option>
 										
-											<?php $AcademicYear->dropDown_academicYear(); ?>
+											<?php $sessions_db ->dropdownSession(); ?>
                                             </select>
                                         </div>
                                         <!--end::Input group-->
@@ -663,7 +668,7 @@ License: For each use you must have a valid license purchased only from above li
                                          
 											<select  name="term"  class="form-control form-control-lg form-control-solid"  autocomplete="off">
 											<option value=""> Select Term</option>
-											<?php $AcademicYear->dropDown_academicTerm(); ?>
+											<?php $term->dropdownTerm(); ?>
                                             </select>
                                         </div>
 

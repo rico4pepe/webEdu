@@ -331,6 +331,7 @@ License: For each use you must have a valid license purchased only from above li
 				<!--end::Aside-->
 				<d
 				<!--begin::Wrapper-->
+				
 				<div class="wrapper flex-column flex-row-fluid" id="kt_wrapper">
 					<!--begin::Header-->
 					<div id="kt_header" class="header">
@@ -1143,7 +1144,7 @@ License: For each use you must have a valid license purchased only from above li
 												<!--begin::Position-->
 												<div class="mb-9">
 													<!--begin::Badge-->
-													<div class="badge badge-lg badge-light-primary d-inline"><?php echo $name; ?></div>
+													<div class="badge badge-lg badge-light-primary d-inline"><?php echo $First_Name; ?></div>
 													<!--begin::Badge-->
 												</div>
 												<!--end::Position-->
@@ -1558,6 +1559,7 @@ License: For each use you must have a valid license purchased only from above li
 					<!--end::Footer-->
 				</div>
 				</div>
+				
 				<!--end::Wrapper-->
 				<!--begin::Sidebar-->
 				

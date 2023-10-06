@@ -3550,7 +3550,7 @@ License: For each use you must have a valid license purchased only from above li
 		<script src="assets/js/custom/apps/user-management/users/list/export-users.js"></script>
 		<script src="assets/js/custom/apps/user-management/users/list/add.js"></script>
 		<script src="assets/js/custom/widgets.js"></script>
-		<script src="assets/js/custom/apps/chat/chat.js"></script>
+		<script src="assets/js/cu  stom/apps/chat/chat.js"></script>
 		<script src="assets/js/custom/modals/users-search.js"></script>
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->

@@ -2,6 +2,9 @@
 require_once('../PhpConnections/connection.php');
 require_once("../classes/learnersInfo.php");
 require_once('../utilites/Randomizer.php');
+require_once('../classes/Arms.php');
+require_once('../classes/SchoolClass.php');
+require_once('../classes/Annex.php');
 
 $GenerateValue = new Randomizer();
 $unique_id = $GenerateValue->generate_random_password(7);
@@ -9,21 +12,14 @@ $password = $GenerateValue->generate_random_password(10);
 
 
 $learner = new learners();
+$classes = new SchoolClass();
+$arm = new Arms();
+$annex = new Annex();
 
 ?>
 
 <!DOCTYPE html>
-<!--
-Author: Keenthemes
-Product Name: Metronic - Bootstrap 5 HTML, VueJS, React, Angular & Laravel Admin Dashboard Theme
-Purchase: https://1.envato.market/EA4JP
-Website: http://www.keenthemes.com
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Dribbble: www.dribbble.com/keenthemes
-Like: www.facebook.com/keenthemes
-License: For each use you must have a valid license purchased only from above link in order to legally use the theme for your project.
--->
+
 <html lang="en">
 <!--begin::Head-->
 
@@ -88,6 +84,9 @@ License: For each use you must have a valid license purchased only from above li
                                         $unique_id = $_POST["student_unique_number"];
                                         $unique_password = $_POST["pass"];
                                         $unique_password = password_hash($unique_password, PASSWORD_BCRYPT);
+                                        $class_id =  $_POST["class_id"];
+                                        $arm_id =  $_POST["arm_id"];
+                                        $annex_id =  $_POST["annex_id"];
                                         //$myImag  = trim($_POST["file"]);
                                        $targetDirectory = "../uploads/";
                                        $targetFile = $targetDirectory . basename($_FILES["file"]["name"]);
@@ -102,7 +101,7 @@ License: For each use you must have a valid license purchased only from above li
                                        move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile);
 
                                         
-                                        $learner->insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation,$unique_id, $unique_password, $targetFile);
+                                        $learner->insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation,$unique_id, $unique_password,$class_id, $arm_id, $annex_id, $targetFile);
                                     }
                                     }
                         ?>
@@ -162,6 +161,30 @@ License: For each use you must have a valid license purchased only from above li
                                 <label class="form-label fw-bolder text-dark fs-6">Address</label>
                                 <input class="form-control form-control-lg form-control-solid" type="text" placeholder="" id="address" name="address" autocomplete="off" />
                                 <br><br>
+                            </div>
+
+                            <div class="col-xl-4">
+                                <label class="form-label fw-bolder text-dark fs-6"> Class</label>
+                                <select  class="form-control form-control-lg form-control-solid" name="class_id" id = "class_id" autocomplete="off">
+                                                <option value = ""> Select Class </option>
+												<?php $classes->dropdownClass(); ?>
+											</select>
+                            </div>
+
+
+                            <div class="col-xl-4">
+                                <label class="form-label fw-bolder text-dark fs-6">Arm</label>
+                                <select  class="form-control form-control-lg form-control-solid" name="arm_id" id = "arm_id" autocomplete="off">
+                                                <option value = ""> Select Arm </option>
+												<?php $arm->dropdownArm(); ?>
+											</select>
+                            </div>
+                            <div class="col-xl-4">
+                                <label class="form-label fw-bolder text-dark fs-6">Annex</label>
+                                <select  class="form-control form-control-lg form-control-solid" name="annex_id" id = "annex_id" autocomplete="off">
+                                                <option value = ""> Select Annex </option>
+												<?php $annex->dropdownAnnex(); ?>
+											</select>
                             </div>
 
 
@@ -289,32 +312,35 @@ License: For each use you must have a valid license purchased only from above li
     <!--end::Main-->
     <!--begin::Javascript-->
     <script>
-        var hostUrl = "assets/";
+        let hostUrl = "assets/";
     </script>
     <!--begin::Global Javascript Bundle(used by all pages)-->
     <script src="assets/plugins/global/plugins.bundle.js"></script>
     <script src="assets/js/scripts.bundle.js"></script>
     <script>
         function isValidEmail(email) {
-            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            let regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             return regex.test(email);
         }
 
         function validateForm() {
 
-            var first_name = $.trim($("#first_name").val());
-            var Second_name = $.trim($("#Second_name").val());
-            var SurName = $.trim($("#Sur_Name").val());
-            var Sex = $.trim($("#sex").val());
-            var Date_of_birth = $.trim($("#D_O_B").val());
-            var Guidance_Email = $.trim($("#email").val());
-            var phone_No = $.trim($("#phone_No").val());
-            var address = $.trim($("#address").val());
-            var State_Of_origin = $.trim($("#state_of_origin").val());
-            var Blood_Group = $.trim($("#blood_group").val());
-            var Geno_Type = $.trim($("#Geno_Type").val());
-            var Guidance_Occupation = $.trim($("#Guidance_Occup").val());
-            var myImag = $.trim($("#my_Image").val());
+            let first_name = $.trim($("#first_name").val());
+            let Second_name = $.trim($("#Second_name").val());
+            let SurName = $.trim($("#Sur_Name").val());
+            let Sex = $.trim($("#sex").val());
+            let Date_of_birth = $.trim($("#D_O_B").val());
+            let Guidance_Email = $.trim($("#email").val());
+            let phone_No = $.trim($("#phone_No").val());
+            let address = $.trim($("#address").val());
+            let State_Of_origin = $.trim($("#state_of_origin").val());
+            let Blood_Group = $.trim($("#blood_group").val());
+            let Geno_Type = $.trim($("#Geno_Type").val());
+            let Guidance_Occupation = $.trim($("#Guidance_Occup").val());
+            let class_id = $.trim($("#class_id").val());
+            let arm_id = $.trim($("#arm_id").val());
+            let annex_id = $.trim($("#annex_id").val());
+            let myImag = $.trim($("#my_Image").val());
 
 
 
@@ -393,15 +419,35 @@ License: For each use you must have a valid license purchased only from above li
                 return false;
             }
 
-
-            // validate Genotype
-            if (Geno_Type == "") {
+            if (class_id == "") {
                 document.getElementById('error').style['display'] = 'block';
-                document.getElementById('error').innerHTML = "Genotype is required"
+                document.getElementById('error').innerHTML = "Class is required"
 
-                $("#Geno_Type").focus();
+                $("#class_id").focus();
                 return false;
             }
+            if (arm_id == "") {
+                document.getElementById('error').style['display'] = 'block';
+                document.getElementById('error').innerHTML = "Arm is required"
+
+                $("#arm_id").focus();
+                return false;
+            }
+            if (annex_id == "") {
+                document.getElementById('error').style['display'] = 'block';
+                document.getElementById('error').innerHTML = "Annex is required"
+
+                $("#annex_id").focus();
+                return false;
+            }
+            // validate Genotype
+            // if (Geno_Type == "") {
+            //     document.getElementById('error').style['display'] = 'block';
+            //     document.getElementById('error').innerHTML = "Genotype is required"
+
+            //     $("#Geno_Type").focus();
+            //     return false;
+            // }
 
             // validate Guidance Occupation 
             if (Guidance_Occupation == "") {

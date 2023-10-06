@@ -53,4 +53,18 @@ class Term
         }
         
     }
+
+    function dropdownTerm(){
+        $conn = connect();
+        $user_query  = $conn->prepare("SELECT term_id, term_name FROM school_term");
+        $user_query->execute();
+
+
+        while($row = $user_query->fetch(PDO::FETCH_ASSOC)){
+            $term_id = $row['term_id'];
+           $term_name = $row['term_name'];
+
+            echo '<option value=" '. $term_id .'" >'.$term_name.'</option>';
+   }
+    }
 }

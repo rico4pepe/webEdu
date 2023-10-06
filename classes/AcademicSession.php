@@ -1,16 +1,9 @@
 <?php
-require_once("../PhpConnections/connection.php");
+require_once(__DIR__ . "/../PhpConnections/connection.php");
+
 
 Class AcademicSession{
 
-    //private $all_user = [];
-
-    // private $Day;
-    // private $Hour;
-    
-    // private $Subjects;
-
-    // private $conn;
 
     public function __constructor()
     {
@@ -18,21 +11,7 @@ Class AcademicSession{
     }
 
 
-   function facilitators()
-   {
-
-       $conn = connect();
-    $user_query  = $conn->prepare("SELECT * FROM staff_db");
-    $user_query->execute();
-   
-        while($row = $user_query->fetch(PDO::FETCH_ASSOC))
-        {
-                 $users = $row['First_Name'] . " " . $row['Sur_Name'];
-                 $userId = $row['staff_ID'];
-
-                 echo '<option value=" '.$userId.'" >'.$users.'</option>';
-        }
-    }
+  
 
     function dropDown_academicYear()
     {
@@ -83,7 +62,7 @@ Class AcademicSession{
         try {
             //code...
 
-           
+         
 
             if($academic_count == 0){
                 $sql = "INSERT INTO `academic_session` (`session_id`, `term_id`) VALUES " . "( :sessname, :tname )";
@@ -116,14 +95,19 @@ Class AcademicSession{
           }
                
             }else{
+            
                 $academic_query  = $conn->query("SELECT id AS academicId FROM `academic_session`");
                 $academic_row = $academic_query->fetch((PDO::FETCH_ASSOC));
                 $academic_id  = $academic_row['academicId'];
+
+                
+               
 
                 $stmt = $conn->prepare("UPDATE academic_session SET session_id=:as, term_id=:ua WHERE id=:id");
                 $stmt->bindParam(":as", $academic_year);
                 $stmt->bindParam(":ua", $term);
                 $stmt->bindParam(":id", $academic_id );
+                $stmt->execute();
 
                 $num_rows = $stmt->rowCount();
 
@@ -157,5 +141,15 @@ Class AcademicSession{
         }
         
     }
+
+
+    function getActiveSessionTerm (){
+        $conn = connect();
+        $user_query  = $conn->prepare("SELECT academic_session.id as session_id, academic_session.term_id, school_term.term_name, session_table.Session_year FROM `academic_session` JOIN school_term on 
+        school_term.term_id = academic_session.term_id JOIN session_table on session_table.id = academic_session.session_id");
+        $user_query->execute();
+        $row = $user_query->fetch(PDO::FETCH_ASSOC);
+        return $row;
+    }  
 
 }

@@ -53,4 +53,19 @@ class Session
         }
         
     }
+
+    
+    function dropdownSession(){
+        $conn = connect();
+        $user_query  = $conn->prepare("SELECT id, Session_year FROM session_table");
+        $user_query->execute();
+
+
+        while($row = $user_query->fetch(PDO::FETCH_ASSOC)){
+            $session_id = $row['id'];
+           $session_name = $row['Session_year'];
+
+            echo '<option value=" '. $session_id .'" >'.$session_name.'</option>';
+   }
+    }
 }

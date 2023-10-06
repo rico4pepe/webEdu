@@ -91,4 +91,18 @@ class Arms
             echo $ex->getMessage();
         }
     }
+
+    function dropdownArm(){
+        $conn = connect();
+        $user_query  = $conn->prepare("SELECT arms_id, arms_name FROM arms");
+        $user_query->execute();
+
+
+        while($row = $user_query->fetch(PDO::FETCH_ASSOC)){
+            $arms_id = $row['arms_id'];
+           $arms_name = $row['arms_name'];
+
+            echo '<option value=" '. $arms_id .'" >'.$arms_name.'</option>';
+   }
+    }
 }

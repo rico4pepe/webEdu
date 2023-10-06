@@ -337,7 +337,7 @@ License: For each use you must have a valid license purchased only from above li
 				</div>
 				<!--end::Aside-->
 				<!--begin::Wrapper-->
-				<div class="flex-column flex-row-fluid" style="width: 100%; margin-left: 25%;" id="kt_wrapper">
+				<div class="wrapper flex-column flex-row-fluid"  id="kt_wrapper">
 					<!--begin::Header-->
 					<div id="kt_header" class="header">
 						<!--begin::Container-->

@@ -3,7 +3,7 @@ require_once("../PhpConnections/connection.php");
 
 class learners
 {
-    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $unique_id, $unique_password, $targetFile)
+    function insertLearner($first_name, $Second_name, $SurName, $Sex, $Date_of_birth, $Guidance_Email, $Guidance_phone_No, $address, $State_Of_origin, $Blood_Group, $Geno_Type, $Guidance_Occupation, $unique_id, $unique_password,$class_id, $arm_id, $annex_id, $targetFile)
     {
         $conn = connect();
 
@@ -11,8 +11,8 @@ class learners
         $modified_At = date("Y-m-d H:i:s");
         $Is_Deleted = 0;
 
-        $sql = "INSERT INTO `learners_bd` (`First_Name`, `Second_name`, `SurName`, `Sex`, `Date_of_birth`, `Guidance_Email`,`Guidance_phone_No`,`address`, `State_Of_origin`,`Blood_Group`,`Geno_Type`,`Guidance_Occupation`,`student_unique_id`, `password`, `imageUrl`) 
-        VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :ui, :up, :img_url )";
+        $sql = "INSERT INTO `learners_bd` (`First_Name`, `Second_name`, `SurName`, `Sex`, `Date_of_birth`, `Guidance_Email`,`Guidance_phone_No`,`address`, `State_Of_origin`,`Blood_Group`,`Geno_Type`,`Guidance_Occupation`,`student_unique_id`, `password`,`class_id`, `arm_id`, `annex_id`, `imageUrl`) 
+        VALUES " . "( :fname, :Scname, :Sname, :Sex, :D_O_B, :GD_email, :GD_Phone_No, :add, :State_Of_org, :Bld_Grp, :Geno_Type, :GD_Occptn, :ui, :up, :ci, :ai, :annx, :img_url )";
             try {
                 //code...
                 $stmt = $conn->prepare($sql);
@@ -31,6 +31,11 @@ class learners
         $stmt->bindValue(":GD_Occptn", $Guidance_Occupation);
         $stmt->bindValue(":ui", $unique_id);
         $stmt->bindValue(":up", $unique_password);
+
+        $stmt->bindValue(":ci", $class_id);
+        $stmt->bindValue(":ai", $arm_id);
+        $stmt->bindValue(":annx", $annex_id);
+
         $stmt->bindValue(":img_url", $targetFile);
         $stmt->execute();
         $num_rows2 = $stmt->rowCount();
@@ -44,6 +49,18 @@ class learners
                     <?php echo $msg; ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+
+            <script> 
+                var redirectTo = "../Dashboard.php"; // Replace with your desired URL
+
+// Function to perform the redirect after 5 seconds
+            function redirect() {
+                    window.location.href = redirectTo;
+            }
+
+        // Set a timeout to call the redirect function after 5 seconds (5000 milliseconds)
+        setTimeout(redirect, 5000);
+        </script>
 
        <?php   
         }else {

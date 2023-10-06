@@ -112,7 +112,7 @@ class Staff
 
     function dropdownFacilitator(){
         $conn = connect();
-        $user_query  = $conn->prepare("SELECT staff_ID, First_Name, Sur_Name FROM staff_db where role = 5");
+        $user_query  = $conn->prepare("SELECT staff_ID, First_Name, Sur_Name FROM staff_db where role = 4");
         $user_query->execute();
 
 

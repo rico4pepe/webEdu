@@ -211,6 +211,7 @@ if ($userrole == "student"){
                             <span class="menu-title">Registration</span>
                             <span class="menu-arrow"></span>
                         </span>
+
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
                                 <a class="menu-link" href="./Registration/sign-up.php">
@@ -424,6 +425,16 @@ if ($userrole == "student"){
                                 </a>
                             </div>	
                         </div>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link" href="./academicSession/view_session.php">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">View-Sessions</span>
+                                </a>
+                            </div>	
+                        </div>
 
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
@@ -431,7 +442,17 @@ if ($userrole == "student"){
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>
-                                    <span class="menu-title">Term</span>
+                                    <span class="menu-title">Terms</span>
+                                </a>
+                            </div>	
+                        </div>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link" href="./academicSession/view_term.php">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">View-Term</span>
                                 </a>
                             </div>	
                         </div>
@@ -661,10 +682,20 @@ if ($userrole == "student"){
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Roles</span>
+                                            <span class="menu-title">Roles / Task</span>
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <div class="menu-sub menu-sub-accordion">
+
+                                        <div class="menu-item">
+                                                <a class="menu-link" href="./userManagement/assign_class_staff.php">
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    <span class="menu-title">Assign Class</span>
+                                                </a>
+                                            </div>
+
                                             <div class="menu-item">
                                                 <a class="menu-link" href="./userManagement/Create_Role.php">
                                                     <span class="menu-bullet">

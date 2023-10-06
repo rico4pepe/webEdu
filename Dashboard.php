@@ -1,6 +1,11 @@
 <?php
 require_once('PhpConnections/session.php');
-require_once("PhpConnections/connection.php"); 
+require_once("PhpConnections/connection.php");
+require_once("classes/AcademicSession.php"); 
+
+
+$AcademicYear = new AcademicSession();
+$response = $AcademicYear->getActiveSessionTerm();
 
     ini_set( 'display_errors', 1 );
     error_reporting( E_ALL );
@@ -19,6 +24,9 @@ require_once("PhpConnections/connection.php");
 	$username = null; // Return null or handle the case where no result is found
 	$userrole = null;
 }
+
+
+
 
 
 ?>
@@ -298,7 +306,7 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Heading-->
 								<h1 class="d-flex flex-column text-dark fw-bolder my-0 fs-1">Hello, <?php echo $username; ?>
 								<form action = "./utilites/logout.php" method="post"><button class="btn btn-warning"> Logout</button></form>
-								<small class="text-muted fs-6 fw-bold ms-1 pt-1">General Overview for 2022/2023 Session</small></h1>
+								<small class="text-muted fs-6 fw-bold ms-1 pt-1">General Overview for <?php echo $response['term_name'] . " " . $response['Session_year']; ?> Session</small></h1>
 								<!--end::Heading-->
 							</div>
 							<!--end::Page title=-->
