@@ -271,6 +271,17 @@ if ($userrole == "student"){
 
                         <div class="menu-sub menu-sub-accordion">
                             <div class="menu-item">
+                                <a class="menu-link" href="./exam/classroom.php">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title"> My Class room</span>
+                                </a>
+                            </div>	
+                        </div>
+
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
                                 <a class="menu-link" href="./exam/viewStaffExam.php">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>

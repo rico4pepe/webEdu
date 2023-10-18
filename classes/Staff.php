@@ -217,5 +217,20 @@ class Staff
            
     
     }
+
+    function staff_classroom($class_id, $arm_id, $annex_id, $session_id, $term_id){
+        $conn = connect();
+        $query = "SELECT ID, student_unique_id, First_Name, Second_Name, SurName, Sex, imageUrl, Guidance_Email FROM `learners_bd`
+         WHERE  class_id = :ci AND arm_id = :ai AND annex_id = :ad AND session_id = :si AND term_id = :td";
+        $res = $conn->prepare($query);
+        $res->bindValue(":ci", $class_id, PDO::PARAM_STR);
+        $res->bindValue(":ai", $arm_id, PDO::PARAM_STR);
+        $res->bindValue(":ad", $annex_id, PDO::PARAM_STR);
+        $res->bindValue(":si", $session_id, PDO::PARAM_STR);
+        $res->bindValue(":td", $term_id, PDO::PARAM_STR);
+        $res->execute();
+      $row = $res->fetchAll(PDO::FETCH_ASSOC);
+      return $row;
+    }
     
 }

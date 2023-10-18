@@ -647,6 +647,7 @@ License: For each use you must have a valid license purchased only from above li
 
 												
 									<?php
+									   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     if (isset($_POST["btn"])) {
 										if(!empty($_POST["staff_id"])){
 											$staff_id = $_POST["staff_id"];
@@ -669,6 +670,7 @@ License: For each use you must have a valid license purchased only from above li
                                                                        
 										$staffClass->insertAssignClass($staff_id, $class_id, $arm_id, $annex_id, $school_session_id, $term_id);
                                     }
+									   }
                         ?>
                                         <!--begin::Heading-->
                                         <div class="mb-10 text-center">

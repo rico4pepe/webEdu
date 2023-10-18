@@ -50,17 +50,6 @@ class learners
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
-            <script> 
-                var redirectTo = "../Dashboard.php"; // Replace with your desired URL
-
-// Function to perform the redirect after 5 seconds
-            function redirect() {
-                    window.location.href = redirectTo;
-            }
-
-        // Set a timeout to call the redirect function after 5 seconds (5000 milliseconds)
-        setTimeout(redirect, 5000);
-        </script>
 
        <?php   
         }else {
